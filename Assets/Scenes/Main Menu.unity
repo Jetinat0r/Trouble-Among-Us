@@ -1313,6 +1313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76f716223f051d24880ecef872f0580a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deadBodies: []
   localPlayerPrefab: {fileID: 5275630867874494328, guid: 11580ee498e6f1e498d0b1690e6f6883,
     type: 3}
   playerPrefab: {fileID: 5823524229986167283, guid: d30835233d551f544a41bd5e21874308,
