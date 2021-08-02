@@ -302,7 +302,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 680, y: 89}
+  m_AnchoredPosition: {x: 680, y: 87}
   m_SizeDelta: {x: 345, y: 582}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8600412527880424930
@@ -2385,6 +2385,9 @@ MonoBehaviour:
   minigameTaskListTaskParent: {fileID: 369874416773627648}
   minigameTaskListTaskPrefab: {fileID: 3093007547313420934, guid: e66edde160f125c479f5a4fb2d837dc2,
     type: 3}
+  minigameTaskListPartialCompleteColor: {r: 1, g: 1, b: 0, a: 1}
+  minigameTaskListCompletedColor: {r: 0, g: 1, b: 0, a: 1}
+  minigameTaskListEmergencyColor: {r: 1, g: 0, b: 0, a: 1}
   player: {fileID: 5275630867874494322}
   weaponManager: {fileID: 5275630867874494323}
   weaponSelectComponents:

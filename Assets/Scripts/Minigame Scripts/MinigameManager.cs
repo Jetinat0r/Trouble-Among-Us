@@ -21,6 +21,10 @@ public class MinigameManager : MonoBehaviour
     {
         public bool isEmergency;
         public int index;
+
+        //isFirst is for checking whether or not to remove emergencies
+        public bool isFirst;
+        //isFinal is saying that the one that was completed was the final one in the series
         public bool isFinal;
         public string completeText;
     }
@@ -33,6 +37,7 @@ public class MinigameManager : MonoBehaviour
         public bool isEmergency;
         public int index;
         public string incompleteText;
+        public bool isFirst;
     }
     #endregion
 
@@ -62,7 +67,7 @@ public class MinigameManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.J))
         {
-            AssignGlobalMinigame(GLOBAL_TEST);
+            AssignGlobalMinigame(globalMinigameStarters[GLOBAL_TEST]);
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
@@ -76,16 +81,21 @@ public class MinigameManager : MonoBehaviour
 
     public void AssignMinigame(MinigameStarter _ms)
     {
-        //TODO: ADD MINIGAME TO PLAYER UI (use minigameStarters[index].minigameName)
-
-        OnMinigameAssign?.Invoke(this, new OnMinigameAssignArgs { isEmergency = false, index = _ms.index, incompleteText = _ms.incompleteText });
+        OnMinigameAssign?.Invoke(this, new OnMinigameAssignArgs { isEmergency = false, index = _ms.index, incompleteText = _ms.incompleteText, isFirst = _ms.isFirst });
 
         _ms.gameObject.SetActive(true);
     }
 
-    public void AssignGlobalMinigame(int _index)
+    public void AssignGlobalMinigame(MinigameStarter _ms)
     {
-        globalMinigameStarters[_index].gameObject.SetActive(true);
+        //First check if its the doors, and if so: don't alert the player's UI
+        //The check for this will be the "isFirst" flag
+
+        OnMinigameAssign?.Invoke(this, new OnMinigameAssignArgs { isEmergency = true, index = _ms.index, incompleteText = _ms.incompleteText, isFirst = _ms.isFirst });
+
+        //Only one Emergency can take place at the same time
+
+        _ms.gameObject.SetActive(true);
     }
 
     //TODO: CALL WHEN A MATCH IS RESET
@@ -96,9 +106,9 @@ public class MinigameManager : MonoBehaviour
             _ms.ClearMinigame();
         }
 
-        foreach(MinigameStarter ms in globalMinigameStarters)
+        foreach(MinigameStarter _ms in globalMinigameStarters)
         {
-            ms.ClearMinigame();
+            _ms.ClearMinigame();
         }
     }
 
@@ -110,16 +120,20 @@ public class MinigameManager : MonoBehaviour
             _ms.RemoteCloseMinigame();
         }
 
-        foreach (MinigameStarter ms in globalMinigameStarters)
+        foreach (MinigameStarter _ms in globalMinigameStarters)
         {
-            ms.RemoteCloseMinigame();
+            _ms.RemoteCloseMinigame();
         }
     }
 
     //Door tasks or emergencies
     public void GlobalMinigameCompleted(int _index)
     {
-        //TODO: Clear from UI and yell at every other player
+        //DONE: Clear from UI
+        //TODO: yell at every other player
+        OnMinigameComplete?.Invoke(this, new OnMinigameCompleteEventArgs { isEmergency = true, index = _index, isFinal = true, completeText = globalMinigameStarters[_index].completeText, isFirst = globalMinigameStarters[_index].isFirst });
+
+        //To be handled server side
         globalMinigameStarters[_index].ClearMinigame();
     }
 
@@ -127,7 +141,7 @@ public class MinigameManager : MonoBehaviour
     {
         //DONE: calls player ui to complete minigame within minigame class
 
-        OnMinigameComplete?.Invoke(this, new OnMinigameCompleteEventArgs { isEmergency = false, index = _index, isFinal = _isFinal, completeText = minigameStarters[_index].completeText });
+        OnMinigameComplete?.Invoke(this, new OnMinigameCompleteEventArgs { isEmergency = false, index = _index, isFinal = _isFinal, completeText = minigameStarters[_index].completeText, isFirst = minigameStarters[_index].isFirst });
 
         //no need to SetActive(false) bc minigameStarter does that already
         if (!_isFinal)
@@ -176,7 +190,7 @@ public class MinigameManager : MonoBehaviour
 
         for(int i = 0; i < currentMinigames.Count; i++)
         {
-            Debug.Log("Heya " + i);
+            //Debug.Log("Heya " + i);
             AssignMinigame(currentMinigames[i]);
         }
     }

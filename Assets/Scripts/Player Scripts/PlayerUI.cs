@@ -60,7 +60,22 @@ public class PlayerUI : MonoBehaviour, IUIObjectHover
     [SerializeField]
     private GameObject minigameTaskListTaskPrefab;
     //Used for the tasks under the header
-    private List<GameObject> minigameTaskListTasks = new List<GameObject>();
+    private List<TaskListMinigame> minigameTaskListTasks = new List<TaskListMinigame>();
+    private List<TaskListMinigame> minigameTaskListEmergencies = new List<TaskListMinigame>();
+
+    [SerializeField]
+    private Color minigameTaskListPartialCompleteColor;
+    [SerializeField]
+    private Color minigameTaskListCompletedColor;
+
+    [SerializeField]
+    private Color minigameTaskListEmergencyColor;
+
+    public struct TaskListMinigame
+    {
+        public GameObject minigame;
+        public int index;
+    }
     #endregion
 
     #region Misc Called Objects
@@ -85,14 +100,14 @@ public class PlayerUI : MonoBehaviour, IUIObjectHover
         MinigameManager.instance.OnMinigameAssign += OnMinigameAssign;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            int _curTask = minigameTaskListTasks.Count + 1;
-            AddTask("Task " + _curTask, false);
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.G))
+    //    {
+    //        int _curTask = minigameTaskListTasks.Count + 1;
+    //        AddTask("Task " + _curTask, false);
+    //    }
+    //}
 
     private void SelectWeapon(int _weapon)
     {
@@ -132,25 +147,69 @@ public class PlayerUI : MonoBehaviour, IUIObjectHover
         StartCoroutine(ReloadBarFillRoutine(timer));
     }
 
-    public void AddTask(string _text, bool _isComplete)
+    public void AddTask(TaskListMinigame _minigameStruct, string _text, int _index, bool _isComplete, bool _isFirst)
     {
-        GameObject _taskListTask = Instantiate(minigameTaskListTaskPrefab, minigameTaskListTaskParent.transform);
-        //_taskListTask.transform.SetParent(minigameTaskListTaskParent.transform);
-
-        _taskListTask.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1 * _taskListTask.GetComponent<RectTransform>().sizeDelta.y * minigameTaskListTasks.Count);
-        minigameTaskListTasks.Add(_taskListTask);
-
-        _taskListTask.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "   -   " + _text;
-    }
-
-    private void OnMinigameComplete(object _sender, MinigameManager.OnMinigameCompleteEventArgs _e)
-    {
-        if (!_e.isEmergency)
+        if(_minigameStruct.minigame == null)
         {
-            StartCoroutine(CompleteMinigameTextRoutine());
+            GameObject _taskListTask = Instantiate(minigameTaskListTaskPrefab, minigameTaskListTaskParent.transform);
+            //_taskListTask.transform.SetParent(minigameTaskListTaskParent.transform);
+
+            _taskListTask.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1 * _taskListTask.GetComponent<RectTransform>().sizeDelta.y * minigameTaskListTasks.Count);
+            _minigameStruct = new TaskListMinigame { minigame = _taskListTask, index = _index };
+
+            minigameTaskListTasks.Add(_minigameStruct);
+        }
+        else
+        {
+            _minigameStruct.index = _index;
         }
 
-        Debug.Log(_e.isFinal);
+        _minigameStruct.minigame.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "   -   " + _text;
+
+        if (!_isFirst)
+        {
+            _minigameStruct.minigame.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = minigameTaskListPartialCompleteColor;
+        }
+
+        //Overrides the yellow if it is complete
+        if (_isComplete)
+        {
+            _minigameStruct.minigame.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = minigameTaskListCompletedColor;
+        }
+    }
+
+    public void AddEmergency(TaskListMinigame _minigameStruct, string _text, int _index)
+    {
+        if (_minigameStruct.minigame == null)
+        {
+            GameObject _taskListTask = Instantiate(minigameTaskListTaskPrefab, minigameTaskListTaskParent.transform);
+            //_taskListTask.transform.SetParent(minigameTaskListTaskParent.transform);
+
+            //_taskListTask.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1 * _taskListTask.GetComponent<RectTransform>().sizeDelta.y * (minigameTaskListEmergencies.Count + minigameTaskListTasks.Count));
+            _minigameStruct = new TaskListMinigame { minigame = _taskListTask, index = _index };
+
+            minigameTaskListEmergencies.Add(_minigameStruct);
+        }
+        else
+        {
+            _minigameStruct.index = _index;
+            Debug.LogWarning("Pretty sure something went wrong...");
+        }
+
+        _minigameStruct.minigame.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "   -   " + _text;
+        _minigameStruct.minigame.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = minigameTaskListEmergencyColor;
+
+        PlaceEmergencies();
+    }
+
+    public void PlaceEmergencies()
+    {
+        for(int i = 0; i < minigameTaskListEmergencies.Count; i++)
+        {
+            GameObject _listObject = minigameTaskListEmergencies[i].minigame;
+
+            _listObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1 * _listObject.GetComponent<RectTransform>().sizeDelta.y * (minigameTaskListTasks.Count + i));
+        }
     }
 
     public void Die()
@@ -297,13 +356,112 @@ public class PlayerUI : MonoBehaviour, IUIObjectHover
     {
         if (!_e.isEmergency)
         {
-            AddTask(_e.incompleteText, false);
+            TaskListMinigame _minigameStruct = new TaskListMinigame { minigame = null, index = -1 };
+
+            foreach (TaskListMinigame _minigameStructs in minigameTaskListTasks)
+            {
+                if (_minigameStructs.index == _e.index)
+                {
+                    _minigameStruct = _minigameStructs;
+                }
+            }
+
+            AddTask(_minigameStruct, _e.incompleteText, _e.index, false, _e.isFirst);
         }
         else
         {
+            //TDOD: AddEmergency()
+            //if isFirst == false, don't add to UI 
+            //used for things like the door tasks
 
+            if (!_e.isFirst)
+            {
+                return;
+            }
+
+            TaskListMinigame _minigameStruct = new TaskListMinigame { minigame = null, index = -1 };
+
+            foreach (TaskListMinigame _minigameStructs in minigameTaskListEmergencies)
+            {
+                if (_minigameStructs.index == _e.index)
+                {
+                    _minigameStruct = _minigameStructs;
+                }
+            }
+
+            AddEmergency(_minigameStruct, _e.incompleteText, _e.index);
         }
         
+    }
+
+    private void OnMinigameComplete(object _sender, MinigameManager.OnMinigameCompleteEventArgs _e)
+    {
+        if (!_e.isEmergency)
+        {
+            StartCoroutine(CompleteMinigameTextRoutine());
+
+            TaskListMinigame _minigameStruct = new TaskListMinigame { minigame = null, index = -1 };
+            int _minigameStructIndex = -1;
+            int _minigameIndex = -1;
+
+            for (int i = 0; i < minigameTaskListTasks.Count; i++)
+            {
+                if (minigameTaskListTasks[i].index == _e.index)
+                {
+                    _minigameIndex = i;
+                    _minigameStructIndex = _e.index;
+                    _minigameStruct = minigameTaskListTasks[_minigameIndex];
+                }
+            }
+
+            if (_e.isFinal)
+            {
+                AddTask(_minigameStruct, _e.completeText, _minigameStruct.index, true, false);
+            }
+            else
+            {
+                minigameTaskListTasks[_minigameIndex] = new TaskListMinigame { minigame = _minigameStruct.minigame, index = _minigameStruct.index + 1 };
+            }
+        }
+        else
+        {
+            //if isFirst is true, then its a door-like task and is not on the player's UI 
+            if (!_e.isFirst)
+            {
+                return;
+            }
+
+            TaskListMinigame _minigameStruct = new TaskListMinigame { minigame = null, index = -1 };
+            int _minigameStructIndex = -1;
+            int _minigameIndex = -1;
+
+            for (int i = 0; i < minigameTaskListEmergencies.Count; i++)
+            {
+                if (minigameTaskListEmergencies[i].index == _e.index)
+                {
+                    _minigameIndex = i;
+                    _minigameStructIndex = _e.index;
+                    _minigameStruct = minigameTaskListEmergencies[_minigameIndex];
+                }
+            }
+
+            //Destroy specific emergency
+            Destroy(_minigameStruct.minigame);
+            minigameTaskListEmergencies.RemoveAt(_minigameIndex);
+
+            //Replace existing emergencies
+            PlaceEmergencies();
+        }
+    }
+
+    private List<TaskListMinigame> ClearMinigameTaskList(List<TaskListMinigame> _taskList)
+    {
+        foreach(TaskListMinigame _minigameStruct in _taskList)
+        {
+            Destroy(_minigameStruct.minigame);
+        }
+
+        return new List<TaskListMinigame>();
     }
 
     private void OnDestroy()
@@ -312,4 +470,6 @@ public class PlayerUI : MonoBehaviour, IUIObjectHover
         MinigameManager.instance.OnMinigameComplete -= OnMinigameComplete;
         MinigameManager.instance.OnMinigameAssign -= OnMinigameAssign;
     }
+
+    
 }

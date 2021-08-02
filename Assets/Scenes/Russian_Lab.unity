@@ -1607,13 +1607,13 @@ MonoBehaviour:
     type: 3}
   minigameManager: {fileID: 1349368479}
   minigameName: Gas Fill
-  isFirst: 0
+  isFirst: 1
   isFinal: 0
   index: 2
   isPersistent: 1
   isEmergency: 0
   localPlayerMinigameCheckerTag: Local Player Minigame Checker
-  incompleteText: Fill Gas Can (1/2)
+  incompleteText: Fill Gas Can (0/2)
   completeText: ...
   minigameGlow: {fileID: 806224163}
 --- !u!58 &639418680
@@ -10670,6 +10670,9 @@ MonoBehaviour:
   globalMinigameStarters:
   - {fileID: 159694554}
   - {fileID: 2114407445}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   TEST: 1
   GLOBAL_TEST: 1
   currentMinigames: []
@@ -12175,8 +12178,8 @@ MonoBehaviour:
   isPersistent: 0
   isEmergency: 1
   localPlayerMinigameCheckerTag: Local Player Minigame Checker
-  incompleteText: 
-  completeText: 
+  incompleteText: Doors 1
+  completeText: ...
   minigameGlow: {fileID: 459544180}
 --- !u!58 &2114407446
 CircleCollider2D:
