@@ -10670,9 +10670,6 @@ MonoBehaviour:
   globalMinigameStarters:
   - {fileID: 159694554}
   - {fileID: 2114407445}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   TEST: 1
   GLOBAL_TEST: 1
   currentMinigames: []

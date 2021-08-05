@@ -425,7 +425,7 @@ public class PlayerUI : MonoBehaviour, IUIObjectHover
         }
         else
         {
-            //if isFirst is true, then its a door-like task and is not on the player's UI 
+            //if isFirst is false, then its a door-like task and is not on the player's UI 
             if (!_e.isFirst)
             {
                 return;

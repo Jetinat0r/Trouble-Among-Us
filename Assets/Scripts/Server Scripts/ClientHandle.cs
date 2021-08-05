@@ -167,4 +167,18 @@ public class ClientHandle : MonoBehaviour
 
         GameManager.instance.StartRound();
     }
+
+    public static void AssignEmergency(Packet _packet)
+    {
+        int _emergencyID = _packet.ReadInt();
+
+        MinigameManager.instance.AssignGlobalMinigame(MinigameManager.instance.globalMinigameStarters[_emergencyID]);
+    }
+
+    public static void RemoteCompleteEmergency(Packet _packet)
+    {
+        int _emergencyID = _packet.ReadInt();
+
+        MinigameManager.instance.GlobalMinigameCompleted(MinigameManager.instance.globalMinigameStarters[_emergencyID]);
+    }
 }

@@ -70,5 +70,27 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
     }
+
+    public static void ClientEmergencyStartRequest(MinigameStarter _ms)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.clientEmergencyStartRequest))
+        {
+            _packet.Write(_ms.index);
+            _packet.Write(_ms.isFirst);
+
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void ClientCompleteEmergency(MinigameStarter _ms)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.clientCompleteEmergency))
+        {
+            _packet.Write(_ms.index);
+            _packet.Write(_ms.isFirst);
+
+            SendTCPData(_packet);
+        }
+    }
     #endregion
 }

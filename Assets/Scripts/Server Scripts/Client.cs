@@ -309,7 +309,9 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.spawnBullet, ClientHandle.SpawnBullet },
             { (int)ServerPackets.damagePlayer, ClientHandle.DamagePlayer },
             { (int)ServerPackets.remoteDeath, ClientHandle.RemoteDeath },
-            { (int)ServerPackets.startRound, ClientHandle.StartRound }
+            { (int)ServerPackets.startRound, ClientHandle.StartRound },
+            { (int)ServerPackets.assignEmergency, ClientHandle.AssignEmergency },
+            { (int)ServerPackets.remoteCompleteEmergency, ClientHandle.RemoteCompleteEmergency }
         };
         Debug.Log("Initialized packets.");
     }

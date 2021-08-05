@@ -120,7 +120,7 @@ public class MinigameStarter : MonoBehaviour
         {
             isSpawned = false;
             minigameGlow.SetActive(false);
-            minigameManager.MinigameCompleted(index, isFinal);
+            minigameManager.MinigameCompleted(this);
             isOpen = false;
             gameObject.SetActive(false);
         }
@@ -128,7 +128,7 @@ public class MinigameStarter : MonoBehaviour
         {
             isSpawned = false;
             minigameGlow.SetActive(false);
-            minigameManager.GlobalMinigameCompleted(index);
+            minigameManager.GlobalMinigameCompleted(this);
             isOpen = false;
             gameObject.SetActive(false);
         }

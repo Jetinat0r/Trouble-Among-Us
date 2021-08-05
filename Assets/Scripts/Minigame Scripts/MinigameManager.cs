@@ -67,7 +67,8 @@ public class MinigameManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.J))
         {
-            AssignGlobalMinigame(globalMinigameStarters[GLOBAL_TEST]);
+            //AssignGlobalMinigame(globalMinigameStarters[GLOBAL_TEST]);
+            ClientSend.ClientEmergencyStartRequest(globalMinigameStarters[GLOBAL_TEST]);
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
@@ -127,26 +128,27 @@ public class MinigameManager : MonoBehaviour
     }
 
     //Door tasks or emergencies
-    public void GlobalMinigameCompleted(int _index)
+    public void GlobalMinigameCompleted(MinigameStarter _ms)
     {
         //DONE: Clear from UI
         //TODO: yell at every other player
-        OnMinigameComplete?.Invoke(this, new OnMinigameCompleteEventArgs { isEmergency = true, index = _index, isFinal = true, completeText = globalMinigameStarters[_index].completeText, isFirst = globalMinigameStarters[_index].isFirst });
+        OnMinigameComplete?.Invoke(this, new OnMinigameCompleteEventArgs { isEmergency = true, index = _ms.index, isFinal = true, completeText = _ms.completeText, isFirst = _ms.isFirst });
 
         //To be handled server side
-        globalMinigameStarters[_index].ClearMinigame();
+        ClientSend.ClientCompleteEmergency(_ms);
+        //globalMinigameStarters[_ms.index].ClearMinigame();
     }
 
-    public void MinigameCompleted(int _index, bool _isFinal)
+    public void MinigameCompleted(MinigameStarter _ms)
     {
         //DONE: calls player ui to complete minigame within minigame class
 
-        OnMinigameComplete?.Invoke(this, new OnMinigameCompleteEventArgs { isEmergency = false, index = _index, isFinal = _isFinal, completeText = minigameStarters[_index].completeText, isFirst = minigameStarters[_index].isFirst });
+        OnMinigameComplete?.Invoke(this, new OnMinigameCompleteEventArgs { isEmergency = false, index = _ms.index, isFinal = _ms.isFinal, completeText = _ms.completeText, isFirst = _ms.isFirst });
 
         //no need to SetActive(false) bc minigameStarter does that already
-        if (!_isFinal)
+        if (!_ms.isFinal)
         {
-            AssignMinigame(minigameStarters[_index + 1]);
+            AssignMinigame(minigameStarters[_ms.index + 1]);
         }
         else
         {
