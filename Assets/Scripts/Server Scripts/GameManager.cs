@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
 
     public string mainMenuSceneName = "Main Menu";
 
+    [HideInInspector]
+    public string localPlayerUsername;
+
     private void Awake()
     {
         if(instance == null)
@@ -83,6 +86,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(_gameSceneName);
 
+        localPlayerUsername = _username;
 
         Client.instance.ConnectToServer();
     }

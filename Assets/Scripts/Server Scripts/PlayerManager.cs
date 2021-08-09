@@ -105,6 +105,7 @@ public class PlayerManager : MonoBehaviour
         RemoteWeaponSwap(curWeapon);
 
         playerBody.GetComponent<SpriteRenderer>().color = playerColor;
+        nameplate.GetComponent<TMP_Text>().text = username;
     }
 
     public void TakeDamage(float _amount)

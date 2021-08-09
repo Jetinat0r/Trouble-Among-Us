@@ -9,7 +9,12 @@ public class MainMenuUIManager : MonoBehaviour
     public static MainMenuUIManager instance;
 
     public GameObject mainMenu;
-    public TMP_InputField usernameField;
+    [SerializeField]
+    private TMP_InputField usernameField;
+    [SerializeField]
+    private TMP_InputField serverIPAdressField;
+    [SerializeField]
+    private TMP_InputField serverPortField;
 
     public string gameSceneName = "Russian_Lab";
 
@@ -28,11 +33,12 @@ public class MainMenuUIManager : MonoBehaviour
 
     public void ConnectToServer()
     {
-        //mainMenu.SetActive(false);
-        //usernameField.interactable = false;
+        //Check if any field is invalid
 
-        GameManager.instance.ConnectToServer(gameSceneName, usernameField.text);
-        //Client.instance.ConnectToServer();
-        //SceneManager.LoadScene(gameSceneName);
+        if(usernameField.text != "" /*&& serverIPAdressField.text != "" && serverPortField.text != ""*/)
+        {
+            //TODO: Add functionality for choosing server
+            GameManager.instance.ConnectToServer(gameSceneName, usernameField.text);
+        }
     }
 }
