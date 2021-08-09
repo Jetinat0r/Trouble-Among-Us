@@ -51,6 +51,8 @@ public class ClientSend : MonoBehaviour
 
     public static void WeaponSwap(int _weapon)
     {
+        Debug.Log("Bruh?");
+
         using (Packet _packet = new Packet((int)ClientPackets.weaponSwap))
         {
             _packet.Write(_weapon);
@@ -88,6 +90,17 @@ public class ClientSend : MonoBehaviour
         {
             _packet.Write(_ms.index);
             _packet.Write(_ms.isFirst);
+
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void ClientCompleteTask(MinigameStarter _ms)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.clientCompleteTask))
+        {
+            //Index sent jic
+            //_packet.Write(_ms.index);
 
             SendTCPData(_packet);
         }

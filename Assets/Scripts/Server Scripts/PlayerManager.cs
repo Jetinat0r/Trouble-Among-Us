@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -38,10 +39,19 @@ public class PlayerManager : MonoBehaviour
 
     public Color playerColor;
 
-    [System.NonSerialized]
+    [Header("Nameplate")]
+    [SerializeField]
+    private Color innocentNameplateColor;
+    [SerializeField]
+    private Color traitorNameplateColor;
+    [SerializeField]
+    private GameObject nameplate;
+
+    [HideInInspector]
     public int completedTasks;
-    [System.NonSerialized]
+    [HideInInspector]
     public int totalTasks;
+
 
     public void PlayerMovement(Vector3 _position, Quaternion _rotation)
     {
@@ -167,6 +177,7 @@ public class PlayerManager : MonoBehaviour
         gameObject.layer = _layer;
         playerBody.layer = _layer;
         playerOutline.layer = _layer;
+        nameplate.layer = _layer;
     }
 
     private void Resurrect()
@@ -182,6 +193,7 @@ public class PlayerManager : MonoBehaviour
         gameObject.layer = _colliderLayer;
         playerBody.layer = _visualLayer;
         playerOutline.layer = _visualLayer;
+        nameplate.layer = _visualLayer;
     }
 
     public void AssignTasks(int _numTasks, int _numInnocents)
@@ -218,10 +230,43 @@ public class PlayerManager : MonoBehaviour
     }
 
     //TODO: Implement
-    public void CompleteTask()
+    public void RemoteCompleteTask()
     {
+        //Receive completed task
+        //Only receive final tasks
 
+        //Updates completed out of not
 
-        //ClientSend
+        completedTasks++;
+
+    }
+
+    public void RemoteTeleport(Vector3 _targetPos)
+    {
+        transform.position = _targetPos;
+
+        if (isLocalPlayer)
+        {
+            Camera.main.transform.position = _targetPos;
+        }
+    }
+
+    public void SetNameplateColor(bool _override)
+    {
+        if (_override)
+        {
+            nameplate.GetComponent<TextMeshPro>().color = innocentNameplateColor;
+        }
+        else
+        {
+            if(gameRole == 1)
+            {
+                nameplate.GetComponent<TextMeshPro>().color = innocentNameplateColor;
+            }
+            else
+            {
+                nameplate.GetComponent<TextMeshPro>().color = traitorNameplateColor;
+            }
+        }
     }
 }

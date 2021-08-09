@@ -38,7 +38,9 @@ public class ClientHandle : MonoBehaviour
         int _curWeapon = _packet.ReadInt();
         Color _color = _packet.ReadColor();
 
-        GameManager.instance.SpawnPlayer(_id, _username, _position, _rotation, _curWeapon, _color);
+        Vector3 _spawnLocation = _packet.ReadVector3();
+
+        GameManager.instance.SpawnPlayer(_id, _username, _position, _rotation, _curWeapon, _color, _spawnLocation);
     }
 
     public static void PlayerMovement(Packet _packet)
@@ -153,15 +155,38 @@ public class ClientHandle : MonoBehaviour
         //Sort the ids (really this easy huh)
         Array.Sort(_activePlayerIds);
 
+        PlayerManager _localPlayer = null;
+
         for (int i = 0; i < _activePlayerIds.Length; i++)
         {
             PlayerManager _player = GameManager.players[_activePlayerIds[i]];
             if (_player != null)
             {
+                if (_player.isLocalPlayer)
+                {
+                    _localPlayer = _player;
+                }
+
                 //Kinda dumb implementation (SetRole could be called in SetGameplayVariables), just want to assure things go right and threading doesn't hurt me
                 _player.SetRole(_roleArray[i]);
                 _player.AssignTasks(_tasksPerPlayer, _numInnocents);
                 _player.SetGameplayVariables(_playerSpeed, _visionRadius);
+                _player.SetNameplateColor(false);
+            }
+        }
+
+        //Sets nameplates to correct colors
+        //Must be called after the previous thing bc I don't actually know the id of the local player
+        if(_localPlayer.gameRole == 1)
+        {
+            for (int i = 0; i < _activePlayerIds.Length; i++)
+            {
+                PlayerManager _player = GameManager.players[_activePlayerIds[i]];
+
+                if (_player != null)
+                {
+                    _player.SetNameplateColor(true);
+                }
             }
         }
 
@@ -180,5 +205,20 @@ public class ClientHandle : MonoBehaviour
         int _emergencyID = _packet.ReadInt();
 
         MinigameManager.instance.GlobalMinigameCompleted(MinigameManager.instance.globalMinigameStarters[_emergencyID]);
+    }
+
+    public static void RemoteTeleport(Packet _packet)
+    {
+        int _playerID = _packet.ReadInt();
+        Vector3 _targetPos = _packet.ReadVector3();
+
+        GameManager.players[_playerID].RemoteTeleport(_targetPos);
+    }
+
+    public static void RemoteCompleteTask(Packet _packet)
+    {
+        int _playerID = _packet.ReadInt();
+
+        GameManager.players[_playerID].RemoteCompleteTask();
     }
 }

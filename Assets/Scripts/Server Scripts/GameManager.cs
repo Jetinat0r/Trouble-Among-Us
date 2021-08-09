@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SpawnPlayer(int _id, string _username, Vector3 _position, Quaternion _rotation, int _curWeapon, Color _color)
+    public void SpawnPlayer(int _id, string _username, Vector3 _position, Quaternion _rotation, int _curWeapon, Color _color, Vector3 _spawnLocation)
     {
         GameObject _player;
         if(_id == Client.instance.myId)
@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
         _playerManager.playerColor = _color;
 
         _playerManager.SetSpawnState();
+        _playerManager.RemoteTeleport(_spawnLocation);
 
         players.Add(_id, _playerManager);
     }

@@ -152,7 +152,8 @@ public class MinigameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Hooray?");
+            ClientSend.ClientCompleteTask(_ms);
+            //Debug.Log("Hooray?");
         }
     }
 

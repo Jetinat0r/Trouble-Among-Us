@@ -311,7 +311,9 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.remoteDeath, ClientHandle.RemoteDeath },
             { (int)ServerPackets.startRound, ClientHandle.StartRound },
             { (int)ServerPackets.assignEmergency, ClientHandle.AssignEmergency },
-            { (int)ServerPackets.remoteCompleteEmergency, ClientHandle.RemoteCompleteEmergency }
+            { (int)ServerPackets.remoteCompleteEmergency, ClientHandle.RemoteCompleteEmergency },
+            { (int)ServerPackets.remoteTeleport, ClientHandle.RemoteTeleport },
+            { (int)ServerPackets.remoteCompleteTask, ClientHandle.RemoteCompleteTask }
         };
         Debug.Log("Initialized packets.");
     }
