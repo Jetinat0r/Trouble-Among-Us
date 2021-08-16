@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,9 +41,16 @@ public class Player : MonoBehaviour
     //Used so ghosts can see lol
     public GameObject ghostViewSquare;
 
+    private bool inMenu = false;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        //Subscribe to events here
+        SettingsUI.instance.OnSettingsOpen += OnSettingsOpen;
+        SettingsUI.instance.OnSettingsClose += OnSettingsClose;
+
         gameRole = gameRoleTester;
         health = maxHealth;
     }
@@ -191,5 +199,23 @@ public class Player : MonoBehaviour
         MinigameManager.instance.StartRound(_numTasks, _isInnocent);
 
         //Player UI takes _numInnocents and _numTasks so it can create a good task bar at the top
+    }
+
+    
+    private void OnSettingsOpen(object _sender, EventArgs _e)
+    {
+        inMenu = true;
+    }
+
+    private void OnSettingsClose(object _sender, EventArgs _e)
+    {
+        inMenu = false;
+    }
+
+    private void OnDestroy()
+    {
+        //Unsubscribe from events here
+        SettingsUI.instance.OnSettingsOpen -= OnSettingsOpen;
+        SettingsUI.instance.OnSettingsClose -= OnSettingsClose;
     }
 }

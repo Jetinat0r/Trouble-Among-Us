@@ -221,4 +221,22 @@ public class ClientHandle : MonoBehaviour
 
         GameManager.players[_playerID].RemoteCompleteTask();
     }
+
+    public static void RemoteSendVoiceChat(Packet _packet)
+    {
+        int _playerID = _packet.ReadInt();
+
+        float[] voiceSamples = _packet.ReadFloatArray();
+        int samples = _packet.ReadInt();
+        int channels = _packet.ReadInt();
+        int maxFreq = _packet.ReadInt();
+        bool isRadioActive = _packet.ReadBool();
+
+        PlayerManager _player = GameManager.players[_playerID];
+
+        if (_player != null)
+        {
+            _player.PlayVCRecording(voiceSamples, samples, channels, maxFreq, isRadioActive);
+        }
+    }
 }

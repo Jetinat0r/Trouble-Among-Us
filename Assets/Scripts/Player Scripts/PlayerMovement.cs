@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +18,15 @@ public class PlayerMovement : MonoBehaviour
     private FOVMeshGenerator fovMeshGeneratorScript;
 
     private bool canMove = true;
+    private bool inCutscene = false;
+    private bool inMenu = false;
+
+    private void Start()
+    {
+        //Subscribe to events here
+        SettingsUI.instance.OnSettingsOpen += OnSettingsOpen;
+        SettingsUI.instance.OnSettingsClose += OnSettingsClose;
+    }
 
     void Update()
     {
@@ -42,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
     //PUT THE "IF(CAN'T MOVE)" HERE
     private void FixedUpdate()
     {
-        if (canMove)
+        if (canMove && !inCutscene && !inMenu)
         {
             //Movement
             rb.MovePosition(rb.position + (movementVector.normalized * movementSpeed * Time.fixedDeltaTime));
@@ -65,6 +75,26 @@ public class PlayerMovement : MonoBehaviour
         canMove = true;
     }
 
+    public void StartCutscene()
+    {
+        inCutscene = true;
+    }
+
+    public void EndCutscene()
+    {
+        inCutscene = true;
+    }
+
+    private void OnSettingsOpen(object _sender, EventArgs _e)
+    {
+        inMenu = true;
+    }
+
+    private void OnSettingsClose(object _sender, EventArgs _e)
+    {
+        inMenu = false;
+    }
+
     private void SendPosRotToServer()
     {
         ClientSend.PlayerPosRot(transform.position, weaponPivot.transform.rotation);
@@ -83,5 +113,12 @@ public class PlayerMovement : MonoBehaviour
             fovMeshGeneratorScript.SetViewRadius(_viewRadius);
         }
         
+    }
+
+    private void OnDestroy()
+    {
+        //Unsubscribe from events here
+        SettingsUI.instance.OnSettingsOpen -= OnSettingsOpen;
+        SettingsUI.instance.OnSettingsClose -= OnSettingsClose;
     }
 }

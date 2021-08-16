@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,9 +12,14 @@ public class PlayerShoot : MonoBehaviour
     private bool allowedToShoot = false;
     private bool isReloading = false;
     private bool UIAllowShoot = true;
+    private bool inMenu = false;
 
     private void Start()
     {
+        //Subscribe to events here
+        SettingsUI.instance.OnSettingsOpen += OnSettingsOpen;
+        SettingsUI.instance.OnSettingsClose += OnSettingsClose;
+
         weaponManager = gameObject.GetComponent<WeaponManager>();
         player = gameObject.GetComponent<Player>();
     }
@@ -28,7 +34,7 @@ public class PlayerShoot : MonoBehaviour
 
     private void Shoot(Weapon _curWeapon)
     {
-        if (allowedToShoot && UIAllowShoot)
+        if (allowedToShoot && UIAllowShoot && !inMenu)
         {
             //for (int i = 0; i < _curWeapon.numShots; i++)
             //{
@@ -79,6 +85,7 @@ public class PlayerShoot : MonoBehaviour
         
     }
 
+    //Adds a cooldown before a player can shoot the weapon they swapped to
     public void SwapWeapons()
     {
         if (!isReloading)
@@ -109,5 +116,22 @@ public class PlayerShoot : MonoBehaviour
     public void UIAllowShooting()
     {
         UIAllowShoot = true;
+    }
+
+    private void OnSettingsOpen(object _sender, EventArgs _e)
+    {
+        inMenu = true;
+    }
+
+    private void OnSettingsClose(object _sender, EventArgs _e)
+    {
+        inMenu = false;
+    }
+
+    private void OnDestroy()
+    {
+        //Unsubscribe from events here
+        SettingsUI.instance.OnSettingsOpen -= OnSettingsOpen;
+        SettingsUI.instance.OnSettingsClose -= OnSettingsClose;
     }
 }

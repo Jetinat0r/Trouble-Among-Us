@@ -51,8 +51,6 @@ public class ClientSend : MonoBehaviour
 
     public static void WeaponSwap(int _weapon)
     {
-        Debug.Log("Bruh?");
-
         using (Packet _packet = new Packet((int)ClientPackets.weaponSwap))
         {
             _packet.Write(_weapon);
@@ -105,5 +103,25 @@ public class ClientSend : MonoBehaviour
             SendTCPData(_packet);
         }
     }
+
+    public static void ClientSendVoiceChat(float[] voiceSamples, int samples, int channels, int maxFreq, bool isRadioActive)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.clientSendVoiceChat))
+        {
+            _packet.Write(voiceSamples);
+            _packet.Write(samples);
+            _packet.Write(channels);
+            _packet.Write(maxFreq);
+            _packet.Write(isRadioActive);
+
+            SendTCPData(_packet);
+        }
+
+        //foreach (float f in voiceSamples)
+        //{
+        //    Debug.Log(f);
+        //}
+    }
+
     #endregion
 }

@@ -47,11 +47,18 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private GameObject nameplate;
 
+    [Header("Voice Chat")]
+    [SerializeField]
+    private AudioSource proxyAudioSource;
+    [SerializeField]
+    private AudioSource globalAudioSource;
+
     [HideInInspector]
     public int completedTasks;
     [HideInInspector]
     public int totalTasks;
 
+    private float vcVolume = 1;
 
     public void PlayerMovement(Vector3 _position, Quaternion _rotation)
     {
@@ -267,6 +274,68 @@ public class PlayerManager : MonoBehaviour
             else
             {
                 nameplate.GetComponent<TextMeshPro>().color = traitorNameplateColor;
+            }
+        }
+    }
+
+    public void SetVCVolume(float _v)
+    {
+        vcVolume = _v;
+    }
+
+    public void PlayVCRecording(float[] voiceSamples, int samples, int channels, int maxFreq, bool isRemoteRadioActive)
+    {
+        bool isLocalRadioActive = MicrophoneManager.instance.isRadioActive;
+        bool isLocalPlayerAlive = GameManager.players[Client.instance.myId].isAlive;
+
+        //IF: Remote player is dead and local isn't, don't bother playing
+        if(!isAlive && isLocalPlayerAlive)
+        {
+            return;
+        }
+
+
+        for (int i = 0; i < voiceSamples.Length; i++)
+        {
+            voiceSamples[i] = voiceSamples[i] * vcVolume;
+        }
+
+        AudioClip voiceClip = AudioClip.Create("Voice", samples, channels, maxFreq, false);
+        voiceClip.SetData(voiceSamples, 0);
+
+        //Debug.Log("Bruh");
+
+        //IF: Local player is dead
+        if (!isLocalPlayerAlive)
+        {
+            //IF: Remote player's radio is active OR if they are dead
+            if (isRemoteRadioActive || !isAlive)
+            {
+                //Play on 2D
+                globalAudioSource.clip = voiceClip;
+                globalAudioSource.Play();
+            }
+            else
+            {
+                //Play on 3D
+                proxyAudioSource.clip = voiceClip;
+                proxyAudioSource.Play();
+            }
+        }
+        else
+        {
+            //IF: Local player is on their radio AND remote player is on their radio
+            if (isLocalRadioActive && isRemoteRadioActive)
+            {
+                //Play on 2D voice chanel
+                globalAudioSource.clip = voiceClip;
+                globalAudioSource.Play();
+            }
+            else
+            {
+                //Play on 3D voice chanel
+                proxyAudioSource.clip = voiceClip;
+                proxyAudioSource.Play();
             }
         }
     }
