@@ -2366,6 +2366,8 @@ MonoBehaviour:
   innocentNameplateColor: {r: 1, g: 1, b: 1, a: 1}
   traitorNameplateColor: {r: 1, g: 0, b: 0, a: 1}
   nameplate: {fileID: 8860153533113603117}
+  proxyAudioSource: {fileID: 0}
+  globalAudioSource: {fileID: 0}
   completedTasks: 0
   totalTasks: 0
 --- !u!1 &5275630867889976917

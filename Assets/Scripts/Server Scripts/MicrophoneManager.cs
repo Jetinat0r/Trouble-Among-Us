@@ -45,7 +45,7 @@ public class MicrophoneManager : MonoBehaviour
     private void Start()
     {
         Client.instance.OnServerConnect += OnServerConnect;
-        Client.instance.OnServerConnect += OnServerDisconnect;
+        Client.instance.OnServerDisconnect += OnServerDisconnect;
     }
 
     #region Unused Mic Logic
@@ -236,6 +236,6 @@ public class MicrophoneManager : MonoBehaviour
     private void OnDestroy()
     {
         Client.instance.OnServerConnect -= OnServerConnect;
-        Client.instance.OnServerConnect -= OnServerDisconnect;
+        Client.instance.OnServerDisconnect -= OnServerDisconnect;
     }
 }

@@ -43,7 +43,7 @@ public class SettingsUI : MonoBehaviour
     private void Start()
     {
         Client.instance.OnServerConnect += OnServerConnect;
-        Client.instance.OnServerConnect += OnServerDisconnect;
+        Client.instance.OnServerDisconnect += OnServerDisconnect;
     }
 
     public void ToggleMenu(GameObject _menu)
@@ -165,14 +165,14 @@ public class SettingsUI : MonoBehaviour
     public void OnServerConnect(object sender, EventArgs e)
     {
         isInGame = true;
-
+        Debug.Log(1);
         serverDisconnectMenuButton.SetActive(true);
     }
 
     public void OnServerDisconnect(object sender, EventArgs e)
     {
         isInGame = false;
-
+        Debug.Log(2);
         serverDisconnectMenuButton.SetActive(false);
     }
 
@@ -187,6 +187,6 @@ public class SettingsUI : MonoBehaviour
     private void OnDestroy()
     {
         Client.instance.OnServerConnect -= OnServerConnect;
-        Client.instance.OnServerConnect -= OnServerDisconnect;
+        Client.instance.OnServerDisconnect -= OnServerDisconnect;
     }
 }
