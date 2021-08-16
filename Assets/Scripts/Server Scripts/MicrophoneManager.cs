@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +42,13 @@ public class MicrophoneManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        Client.instance.OnServerConnect += OnServerConnect;
+        Client.instance.OnServerConnect += OnServerDisconnect;
+    }
+
+    #region Unused Mic Logic
     // Update is called once per frame
     //void Update()
     //{
@@ -79,6 +87,7 @@ public class MicrophoneManager : MonoBehaviour
     //        SendClip(false);
     //    }
     //}
+    #endregion
 
     // Update is called once per frame
     void Update()
@@ -137,7 +146,7 @@ public class MicrophoneManager : MonoBehaviour
 
         Microphone.End(currentMicrophone);
 
-        if(position > 0)
+        if(isInGame && position > 0)
         {
             float[] heldData = new float[heldAudioClip.samples * heldAudioClip.channels];
             heldAudioClip.GetData(heldData, 0);
@@ -150,11 +159,11 @@ public class MicrophoneManager : MonoBehaviour
 
             ClientSend.ClientSendVoiceChat(samplesToSend, position, heldAudioClip.channels, maxFreq, isRadioActive);
         }
-        
 
 
 
 
+        #region Unused Send Logic
         //float[] samplesToSend = new float[heldAudioClip.samples * heldAudioClip.channels];
         //heldAudioClip.GetData(samplesToSend, 0);
 
@@ -176,6 +185,7 @@ public class MicrophoneManager : MonoBehaviour
         //tempAudioPlayer.clip.SetData(samplesToSend, 0);
         //tempAudioPlayer.clip.SetData(clipData, 0);
         //tempAudioPlayer.Play();
+        #endregion
 
         hasClip = false;
 
@@ -194,6 +204,8 @@ public class MicrophoneManager : MonoBehaviour
         Microphone.GetDeviceCaps(currentMicrophone, out minFreq, out maxFreq);
     }
 
+    //NOTE: Fairly certain that a script that contains this must be attatched to an object with an audio source to function properly
+    //
     //private void OnAudioFilterRead(float[] data, int channels)
     //{
     //    float sum = 0f;
@@ -209,5 +221,21 @@ public class MicrophoneManager : MonoBehaviour
     public string GetCurrentMicrophone()
     {
         return currentMicrophone;
+    }
+
+    private void OnServerConnect(object sender, EventArgs e)
+    {
+        isInGame = true;
+    }
+
+    private void OnServerDisconnect(object sender, EventArgs e)
+    {
+        isInGame = false;
+    }
+
+    private void OnDestroy()
+    {
+        Client.instance.OnServerConnect -= OnServerConnect;
+        Client.instance.OnServerConnect -= OnServerDisconnect;
     }
 }

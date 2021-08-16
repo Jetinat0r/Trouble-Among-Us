@@ -21,6 +21,11 @@ public class SettingsUI : MonoBehaviour
     [SerializeField]
     private GameObject microphoneSelectionButtonPrefab;
 
+    [SerializeField]
+    private GameObject serverDisconnectMenuButton;
+
+    private bool isInGame = false;
+
     private void Awake()
     {
         if (instance == null)
@@ -33,6 +38,12 @@ public class SettingsUI : MonoBehaviour
             Debug.Log("Instance already exists, destroying!");
             Destroy(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        Client.instance.OnServerConnect += OnServerConnect;
+        Client.instance.OnServerConnect += OnServerDisconnect;
     }
 
     public void ToggleMenu(GameObject _menu)
@@ -149,5 +160,33 @@ public class SettingsUI : MonoBehaviour
         selectedButton.transform.GetChild(1).GetChild(0).gameObject.SetActive(true);
 
         MicrophoneManager.instance.SetCurrentMicrophone(selectedButton.transform.GetChild(0).GetComponent<TMP_Text>().text);
+    }
+
+    public void OnServerConnect(object sender, EventArgs e)
+    {
+        isInGame = true;
+
+        serverDisconnectMenuButton.SetActive(true);
+    }
+
+    public void OnServerDisconnect(object sender, EventArgs e)
+    {
+        isInGame = false;
+
+        serverDisconnectMenuButton.SetActive(false);
+    }
+
+    public void DisconnectFromServer()
+    {
+        if (isInGame)
+        {
+            Client.instance.Disconnect();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Client.instance.OnServerConnect -= OnServerConnect;
+        Client.instance.OnServerConnect -= OnServerDisconnect;
     }
 }

@@ -20,6 +20,9 @@ public class Client : MonoBehaviour
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
 
+    public event EventHandler OnServerConnect;
+    public event EventHandler OnServerDisconnect;
+
     private void Awake()
     {
         if(instance == null)
@@ -87,6 +90,8 @@ public class Client : MonoBehaviour
             receivedData = new Packet();
 
             stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
+
+            Client.instance.OnServerConnect?.Invoke(Client.instance,EventArgs.Empty);
         }
 
         public void SendData(Packet _packet)
@@ -290,6 +295,8 @@ public class Client : MonoBehaviour
             udp = new UDP();
 
             GameManager.instance.EnableDisconnect();
+            OnServerDisconnect?.Invoke(this, EventArgs.Empty);
+
             Debug.Log("Disconnected from server.");
         }
     }
