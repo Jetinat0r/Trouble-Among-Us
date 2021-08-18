@@ -278,6 +278,11 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public Color GetNameplateColor()
+    {
+        return nameplate.GetComponent<TMP_Text>().color;
+    }
+
     public void SetVCVolume(float _v)
     {
         vcVolume = _v;

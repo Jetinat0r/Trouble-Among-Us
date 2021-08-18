@@ -72,6 +72,8 @@ public class Client : MonoBehaviour
                 SendBufferSize = dataBufferSize,
             };
 
+            Client.instance.OnServerConnect?.Invoke(Client.instance, EventArgs.Empty);
+
             receiveBuffer = new byte[dataBufferSize];
             socket.BeginConnect(instance.ip, instance.port, ConnectCallback, socket);
         }
@@ -91,7 +93,7 @@ public class Client : MonoBehaviour
 
             stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
 
-            Client.instance.OnServerConnect?.Invoke(Client.instance,EventArgs.Empty);
+            //Client.instance.OnServerConnect?.Invoke(Client.instance,EventArgs.Empty);
         }
 
         public void SendData(Packet _packet)

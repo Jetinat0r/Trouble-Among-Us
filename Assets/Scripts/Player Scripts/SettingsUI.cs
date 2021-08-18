@@ -165,7 +165,6 @@ public class SettingsUI : MonoBehaviour
     public void OnServerConnect(object sender, EventArgs e)
     {
         isInGame = true;
-        Debug.Log(1);
         serverDisconnectMenuButton.SetActive(true);
     }
 

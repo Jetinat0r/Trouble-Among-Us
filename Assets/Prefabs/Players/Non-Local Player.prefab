@@ -679,8 +679,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -882,7 +882,7 @@ MonoBehaviour:
   playerBody: {fileID: 7099841785652960140}
   playerOutline: {fileID: 3437133320473890579}
   playerColor: {r: 0, g: 0, b: 0, a: 0}
-  innocentNameplateColor: {r: 1, g: 1, b: 1, a: 1}
+  innocentNameplateColor: {r: 0, g: 0, b: 0, a: 1}
   traitorNameplateColor: {r: 1, g: 0, b: 0, a: 1}
   nameplate: {fileID: 4799797935718597976}
   proxyAudioSource: {fileID: 8205535505069844921}

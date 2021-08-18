@@ -12,7 +12,6 @@ public class MicrophoneManager : MonoBehaviour
     private int maxFreq = 44100;
 
     private AudioClip heldAudioClip;
-    public AudioSource tempAudioPlayer;
 
     private bool isRecording = false;
     private bool hasClip = false;
