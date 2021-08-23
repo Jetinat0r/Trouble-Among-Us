@@ -24,7 +24,9 @@ public enum ServerPackets
     remoteCompleteEmergency,
     remoteTeleport,
     remoteCompleteTask,
-    remoteSendVoiceChat
+    remoteSendVoiceChat,
+    remoteStartEmergencyMeeting,
+    remoteSendMeetingVotes
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -39,7 +41,9 @@ public enum ClientPackets
     clientEmergencyStartRequest,
     clientCompleteEmergency,
     clientCompleteTask,
-    clientSendVoiceChat
+    clientSendVoiceChat,
+    clientStartEmergencyMeeting,
+    clientSendMeetingVote
 }
 
 public class Packet : IDisposable
@@ -177,9 +181,16 @@ public class Packet : IDisposable
         {
             Write(_value[i]);
         }
+    }
 
-        int y = 9;
-        float x = y;
+    public void Write(Color[] _value)
+    {
+        Write(_value.Length);
+
+        for (int i = 0; i < _value.Length; i++)
+        {
+            Write(_value[i]);
+        }
     }
 
     /// <summary>Adds a long to the packet.</summary>
@@ -340,6 +351,19 @@ public class Packet : IDisposable
         for (int i = 0; i < _length; i++)
         {
             _array[i] = ReadFloat();
+        }
+
+        return _array;
+    }
+
+    public Color[] ReadColorArray(bool _moveReadPos = true)
+    {
+        int _length = ReadInt(); //Get length of array
+
+        Color[] _array = new Color[_length];
+        for (int i = 0; i < _length; i++)
+        {
+            _array[i] = ReadColor();
         }
 
         return _array;

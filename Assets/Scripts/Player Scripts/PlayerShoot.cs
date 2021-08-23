@@ -13,6 +13,8 @@ public class PlayerShoot : MonoBehaviour
     private bool isReloading = false;
     private bool UIAllowShoot = true;
     private bool inMenu = false;
+    private bool inCutscene = false;
+    private bool inMeeting = false;
 
     private void Start()
     {
@@ -34,7 +36,7 @@ public class PlayerShoot : MonoBehaviour
 
     private void Shoot(Weapon _curWeapon)
     {
-        if (allowedToShoot && UIAllowShoot && !inMenu)
+        if (allowedToShoot && UIAllowShoot && !inMenu && !inCutscene)
         {
             //for (int i = 0; i < _curWeapon.numShots; i++)
             //{
@@ -94,6 +96,8 @@ public class PlayerShoot : MonoBehaviour
         }
     }
 
+
+    #region Shooting enable/disable
     public void DisableShooting()
     {
         allowedToShoot = false;
@@ -127,6 +131,27 @@ public class PlayerShoot : MonoBehaviour
     {
         inMenu = false;
     }
+
+    public void StartCutscene()
+    {
+        inCutscene = true;
+    }
+
+    public void EndCutscene()
+    {
+        inCutscene = false;
+    }
+
+    public void StartMeeting()
+    {
+        inMeeting = true;
+    }
+
+    public void EndMeeting()
+    {
+        inMeeting = false;
+    }
+#endregion
 
     private void OnDestroy()
     {

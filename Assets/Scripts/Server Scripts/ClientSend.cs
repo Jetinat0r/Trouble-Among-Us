@@ -123,5 +123,23 @@ public class ClientSend : MonoBehaviour
         //}
     }
 
+    public static void ClientStartEmergencyMeeting()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.clientStartEmergencyMeeting))
+        {
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void ClientSendMeetingVote(int targetPlayerId)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.clientSendMeetingVote))
+        {
+            _packet.Write(targetPlayerId);
+
+            SendTCPData(_packet);
+        }
+    }
+
     #endregion
 }

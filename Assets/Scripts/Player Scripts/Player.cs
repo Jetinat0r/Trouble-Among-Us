@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
 
     private Role gameRole;
 
+    public static Player instance;
+
     public float maxHealth = 100f;
     private float health = 100f;
     public bool isAlive = true;
@@ -28,6 +30,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private PlayerShoot playerShoot;
+    [SerializeField]
+    private PlayerMovement playerMovement;
     [SerializeField]
     private PlayerUI playerUI;
 
@@ -43,6 +47,20 @@ public class Player : MonoBehaviour
 
     private bool inMenu = false;
 
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            //DontDestroyOnLoad(gameObject);
+        }
+        else if (instance != this)
+        {
+            Debug.Log("Instance already exists, destroying!");
+            Destroy(gameObject);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -217,5 +235,34 @@ public class Player : MonoBehaviour
         //Unsubscribe from events here
         SettingsUI.instance.OnSettingsOpen -= OnSettingsOpen;
         SettingsUI.instance.OnSettingsClose -= OnSettingsClose;
+    }
+
+    public void StartCutscene()
+    {
+        playerMovement.StartCutscene();
+        playerShoot.StartCutscene();
+    }
+
+    public void EndCutscene()
+    {
+        playerMovement.StartCutscene();
+        playerShoot.StartCutscene();
+    }
+
+    public void StartMeeting()
+    {
+        playerMovement.StartMeeting();
+        playerShoot.StartMeeting();
+    }
+
+    public void EndMeeting()
+    {
+        playerMovement.StartMeeting();
+        playerShoot.StartMeeting();
+    }
+
+    public PlayerShoot GetPlayerShoot()
+    {
+        return playerShoot;
     }
 }

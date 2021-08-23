@@ -5,8 +5,12 @@ using UnityEngine.EventSystems;
 
 public class UIShootBlocker : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField]
     private PlayerShoot playerShoot;
+
+    private void Start()
+    {
+        playerShoot = Player.instance.GetPlayerShoot();
+    }
 
     public void OnPointerEnter(PointerEventData eventData)
     {

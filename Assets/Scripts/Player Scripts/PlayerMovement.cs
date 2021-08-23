@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private bool canMove = true;
     private bool inCutscene = false;
     private bool inMenu = false;
+    private bool inMeeting = false;
 
     private void Start()
     {
@@ -52,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
     //PUT THE "IF(CAN'T MOVE)" HERE
     private void FixedUpdate()
     {
-        if (canMove && !inCutscene && !inMenu)
+        if (canMove && !inCutscene && !inMenu && !inMeeting)
         {
             //Movement
             rb.MovePosition(rb.position + (movementVector.normalized * movementSpeed * Time.fixedDeltaTime));
@@ -65,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
         SendPosRotToServer();
     }
 
+    #region Movement enable/disable
     public void StopMovement()
     {
         canMove = false;
@@ -82,7 +84,17 @@ public class PlayerMovement : MonoBehaviour
 
     public void EndCutscene()
     {
-        inCutscene = true;
+        inCutscene = false;
+    }
+
+    public void StartMeeting()
+    {
+        inMeeting = true;
+    }
+
+    public void EndMeeting()
+    {
+        inMeeting = false;
     }
 
     private void OnSettingsOpen(object _sender, EventArgs _e)
@@ -94,6 +106,8 @@ public class PlayerMovement : MonoBehaviour
     {
         inMenu = false;
     }
+
+#endregion
 
     private void SendPosRotToServer()
     {

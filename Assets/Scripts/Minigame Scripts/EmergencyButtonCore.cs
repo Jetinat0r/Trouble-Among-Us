@@ -31,8 +31,9 @@ public class EmergencyButtonCore : Minigame
         if(player.GetComponent<Player>().meetingsRemaining > 0)
         {
             //networkManager.StartEmergencyMeeting();
-            player.GetComponent<Player>().meetingsRemaining--;
-            CloseMinigame();
+            ClientSend.ClientStartEmergencyMeeting();
+            //player.GetComponent<Player>().meetingsRemaining--;
+            //CloseMinigame();
         }
     }
 }

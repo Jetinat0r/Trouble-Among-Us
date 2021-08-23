@@ -323,7 +323,9 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.remoteCompleteEmergency, ClientHandle.RemoteCompleteEmergency },
             { (int)ServerPackets.remoteTeleport, ClientHandle.RemoteTeleport },
             { (int)ServerPackets.remoteCompleteTask, ClientHandle.RemoteCompleteTask },
-            { (int)ServerPackets.remoteSendVoiceChat, ClientHandle.RemoteSendVoiceChat }
+            { (int)ServerPackets.remoteSendVoiceChat, ClientHandle.RemoteSendVoiceChat },
+            { (int)ServerPackets.remoteStartEmergencyMeeting, ClientHandle.RemoteStartEmergencyMeeting },
+            { (int)ServerPackets.remoteSendMeetingVotes, ClientHandle.RemoteSendMeetingVotes }
         };
         Debug.Log("Initialized packets.");
     }

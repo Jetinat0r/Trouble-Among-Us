@@ -184,7 +184,7 @@ public class MinigameManager : MonoBehaviour
         //Picks random starting task indexes and assigns the respective MinigameStarters to an array
         for(int i = 0; i < _numTasks; i++)
         {
-            Debug.Log("Count: " + _availableTaskIndexes.Count);
+            //Debug.Log("Count: " + _availableTaskIndexes.Count);
             int _random = UnityEngine.Random.Range(0, _availableTaskIndexes.Count);
 
             currentMinigames.Add(minigameStarters[_availableTaskIndexes[_random]]);

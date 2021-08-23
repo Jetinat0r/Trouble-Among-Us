@@ -239,4 +239,26 @@ public class ClientHandle : MonoBehaviour
             _player.PlayVCRecording(voiceSamples, samples, channels, maxFreq, isRadioActive);
         }
     }
+
+    public static void RemoteStartEmergencyMeeting(Packet _packet)
+    {
+        int _playerID = _packet.ReadInt();
+        float _timer = _packet.ReadFloat();
+
+        if(Client.instance.myId == _playerID)
+        {
+            GameManager.players[_playerID].gameObject.GetComponent<Player>().meetingsRemaining--;
+        }
+
+        GameManager.instance.StartEmergencyMeeting(_playerID, _timer);
+    }
+
+    public static void RemoteSendMeetingVotes(Packet _packet)
+    {
+        int[] toPlayerIDs = _packet.ReadIntArray();
+        Color[] _fromPlayers = _packet.ReadColorArray();
+        float _endEmergencyMeetingTimer = _packet.ReadFloat();
+
+        GameManager.instance.EndEmergencyMeeting(toPlayerIDs, _fromPlayers, _endEmergencyMeetingTimer);
+    }
 }

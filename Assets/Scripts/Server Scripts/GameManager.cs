@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,10 +17,15 @@ public class GameManager : MonoBehaviour
 
     public GameObject bulletPrefab;
 
+    public GameObject emergencyMeetingPrefab;
+
     //Tells the FixedUpdate funtion to disconnect the player
     private bool shouldDisconnect = false;
 
     public string mainMenuSceneName = "Main Menu";
+
+    [SerializeField]
+    private RoundChangeScreen emergencyMeetingIntroCutscene;
 
     [HideInInspector]
     public string localPlayerUsername;
@@ -107,5 +113,43 @@ public class GameManager : MonoBehaviour
     public void StartRound()
     {
         //TODO: res everyone, assign tasks, hmm
+    }
+
+    private EmergencyMeetingManager tempEmergencyMeetingManagerScript;
+    private int tempMeetingPlayerID = -1;
+    private float tempMeetingTimer = -1;
+
+    public void StartEmergencyMeeting(int _playerID, float _timer)
+    {
+        MinigameManager.instance.RemoteCloseMinigames();
+
+        emergencyMeetingIntroCutscene.OnCutsceneEnd += EndMeetingIntro;
+
+        tempMeetingPlayerID = _playerID;
+        tempMeetingTimer = _timer;
+
+        emergencyMeetingIntroCutscene.StartCutscene(this);
+    }
+
+    private void EndMeetingIntro(object sender, EventArgs _e)
+    {
+        emergencyMeetingIntroCutscene.OnCutsceneEnd -= EndMeetingIntro;
+
+        SetupMeeting(tempMeetingPlayerID, tempMeetingTimer);
+        tempMeetingPlayerID = -1;
+        tempMeetingTimer = -1;
+    }
+
+    private void SetupMeeting(int _playerID, float _timer)
+    {
+        GameObject meeting = Instantiate(emergencyMeetingPrefab);
+        meeting.GetComponent<EmergencyMeetingManager>().StartMeeting(_playerID, _timer);
+        tempEmergencyMeetingManagerScript = meeting.GetComponent<EmergencyMeetingManager>();
+    }
+
+    public void EndEmergencyMeeting(int[] targetPlayers, Color[] fromPlayers, float endingTimer)
+    {
+        tempEmergencyMeetingManagerScript.DisplayVotes(targetPlayers, fromPlayers);
+        tempEmergencyMeetingManagerScript.EndMeeting(endingTimer);
     }
 }
