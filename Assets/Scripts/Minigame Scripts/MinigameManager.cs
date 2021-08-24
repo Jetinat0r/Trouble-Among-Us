@@ -12,8 +12,8 @@ public class MinigameManager : MonoBehaviour
     //Global Minigames are emergencies
     public MinigameStarter[] globalMinigameStarters;
 
-    public int TEST = 0;
-    public int GLOBAL_TEST = 0;
+    //public int TEST = 0;
+    //public int GLOBAL_TEST = 0;
 
     #region OnMinigameComplete Event
     public event EventHandler<OnMinigameCompleteEventArgs> OnMinigameComplete;
@@ -58,27 +58,27 @@ public class MinigameManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            AssignMinigame(minigameStarters[TEST]);
-        }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            //AssignGlobalMinigame(globalMinigameStarters[GLOBAL_TEST]);
-            ClientSend.ClientEmergencyStartRequest(globalMinigameStarters[GLOBAL_TEST]);
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            ClearMinigames();
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            RemoteCloseMinigames();
-        }
-    }
+    // Dev Keys
+    //void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.L))
+    //    {
+    //        AssignMinigame(minigameStarters[TEST]);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.J))
+    //    {
+    //        //AssignGlobalMinigame(globalMinigameStarters[GLOBAL_TEST]);
+    //        ClientSend.ClientEmergencyStartRequest(globalMinigameStarters[GLOBAL_TEST]);
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.K))
+    //    {
+    //        ClearMinigames();
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.P))
+    //    {
+    //        RemoteCloseMinigames();
+    //    }
+    //}
 
     public void AssignMinigame(MinigameStarter _ms)
     {

@@ -36,7 +36,7 @@ public class PlayerShoot : MonoBehaviour
 
     private void Shoot(Weapon _curWeapon)
     {
-        if (allowedToShoot && UIAllowShoot && !inMenu && !inCutscene)
+        if (allowedToShoot && UIAllowShoot && !inMenu && !inCutscene && !inMeeting)
         {
             //for (int i = 0; i < _curWeapon.numShots; i++)
             //{

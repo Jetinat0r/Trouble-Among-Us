@@ -25,6 +25,9 @@ public class Player : MonoBehaviour
 
     public float hitboxDeactivationTimer = 0.2f;
 
+    [HideInInspector]
+    public bool isRoundReady = false;
+
     [SerializeField] //REVOKE THIS PRIVELAGE WHEN APPLICABLE
     private Role gameRoleTester;
 
@@ -122,6 +125,11 @@ public class Player : MonoBehaviour
         //playerOutline.layer = _layer;
         StartCoroutine(DelayHitboxDeactivation(hitboxDeactivationTimer));
 
+        ResetWeapons();
+    }
+
+    public void ResetWeapons()
+    {
         gameObject.GetComponent<WeaponManager>().ResetWeapons();
     }
 
@@ -245,8 +253,8 @@ public class Player : MonoBehaviour
 
     public void EndCutscene()
     {
-        playerMovement.StartCutscene();
-        playerShoot.StartCutscene();
+        playerMovement.EndCutscene();
+        playerShoot.EndCutscene();
     }
 
     public void StartMeeting()
@@ -257,8 +265,8 @@ public class Player : MonoBehaviour
 
     public void EndMeeting()
     {
-        playerMovement.StartMeeting();
-        playerShoot.StartMeeting();
+        playerMovement.EndMeeting();
+        playerShoot.EndMeeting();
     }
 
     public PlayerShoot GetPlayerShoot()

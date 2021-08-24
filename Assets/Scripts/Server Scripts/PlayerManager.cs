@@ -130,7 +130,7 @@ public class PlayerManager : MonoBehaviour
         //0: Being Shot
         //1: Being Ejected
 
-        if(_causeOfDeath == 0)
+        if (_causeOfDeath == 0)
         {
             GameObject _playerCorpse = Instantiate(playerCorpsePrefab, transform.position, transform.rotation);
             Color _playerBodySprite = playerBody.GetComponent<SpriteRenderer>().color;
@@ -138,14 +138,19 @@ public class PlayerManager : MonoBehaviour
             GameManager.instance.deadBodies.Add(_playerCorpse);
 
         }
-        else
+        else if (_causeOfDeath == 1)
         {
             //Spawn outside
+            GameObject _playerCorpse = Instantiate(playerCorpsePrefab, GraveyardManager.instance.GetNextGravePosition());
+            Color _playerBodySprite = playerBody.GetComponent<SpriteRenderer>().color;
+            _playerCorpse.GetComponent<SpriteRenderer>().color = new Color(_playerBodySprite.r, _playerBodySprite.g, _playerBodySprite.b, 1f);
+            GameManager.instance.deadBodies.Add(_playerCorpse);
         }
 
         if (isLocalPlayer)
         {
             gameObject.GetComponent<Player>().RemoteDeath(_causeOfDeath);
+            isAlive = false;
         }
         else
         {

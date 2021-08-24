@@ -24,8 +24,18 @@ public class GameManager : MonoBehaviour
 
     public string mainMenuSceneName = "Main Menu";
 
+    [Header("Cutscene Scriptable Objects")]
+
     [SerializeField]
     private RoundChangeScreen emergencyMeetingIntroCutscene;
+    [SerializeField]
+    private RoundChangeScreen goodRoundStartCutscene;
+    [SerializeField]
+    private RoundChangeScreen evilRoundStartCutscene;
+    [SerializeField]
+    private RoundChangeScreen goodRoundEndCutscene;
+    [SerializeField]
+    private RoundChangeScreen evilRoundEndCutscene;
 
     [HideInInspector]
     public string localPlayerUsername;
@@ -110,11 +120,29 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
+    //Really should have done more here :P
     public void StartRound()
     {
-        //TODO: res everyone, assign tasks, hmm
+        GraveyardManager.instance.ResetGraveyard();
+        Player.instance.isRoundReady = false;
+
+        ReadyUpButton.instance.RoundStart();
+
+        if(Player.instance.GetGameRole() == Player.Role.Innocent)
+        {
+            goodRoundStartCutscene.StartCutscene(this);
+        }
+        else if (Player.instance.GetGameRole() == Player.Role.Traitor)
+        {
+            evilRoundStartCutscene.StartCutscene(this);
+        }
+        else
+        {
+            Debug.LogWarning("Role not set!");
+        }
     }
 
+    #region Emergency Meeting Stuff
     private EmergencyMeetingManager tempEmergencyMeetingManagerScript;
     private int tempMeetingPlayerID = -1;
     private float tempMeetingTimer = -1;
@@ -152,4 +180,5 @@ public class GameManager : MonoBehaviour
         tempEmergencyMeetingManagerScript.DisplayVotes(targetPlayers, fromPlayers);
         tempEmergencyMeetingManagerScript.EndMeeting(endingTimer);
     }
+    #endregion
 }

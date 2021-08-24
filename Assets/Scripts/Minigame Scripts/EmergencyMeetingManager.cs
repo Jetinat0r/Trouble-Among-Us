@@ -32,11 +32,8 @@ public class EmergencyMeetingManager : MonoBehaviour
 
     //Set all inactive after voting or if the timer runs out
     private List<GameObject> voteButtons = new List<GameObject>();
-
-    private void Start()
-    {
-        
-    }
+    
+    private List<EmergencyVotePlayerBlock> playerProfileBlocks = new List<EmergencyVotePlayerBlock>();
 
     private void Update()
     {
@@ -59,6 +56,10 @@ public class EmergencyMeetingManager : MonoBehaviour
         SetupMeetingLayout(_playerID);
 
         Player.instance.StartMeeting();
+        if (!Player.instance.isAlive)
+        {
+            EndVoting();
+        }
 
         timer = _timer;
         isMeetingActive = true;
@@ -82,6 +83,7 @@ public class EmergencyMeetingManager : MonoBehaviour
             GameObject _playerBlock = Instantiate(playerProfileBlockPrefab, playerProfileBlockContainer.transform);
             _playerBlock.GetComponent<EmergencyVotePlayerBlock>().SetupPlayerProfileBlock(_player, _playerID, this);
             voteButtons.Add(_playerBlock.GetComponent<EmergencyVotePlayerBlock>().GetVoteButton());
+            playerProfileBlocks.Add(_playerBlock.GetComponent<EmergencyVotePlayerBlock>());
         }
     }
 
@@ -102,7 +104,7 @@ public class EmergencyMeetingManager : MonoBehaviour
     //Called when either the player votes (via ClientHandle) or when the time runs out
     public void EndVoting()
     {
-        //isMeetingActive = false;
+        isMeetingActive = false;
 
         foreach(GameObject button in voteButtons)
         {
@@ -120,6 +122,8 @@ public class EmergencyMeetingManager : MonoBehaviour
         EndVoting();
         HideTimer();
 
+
+        //Display the votes
         for(int i = 0; i < playerIDs.Length; i++)
         {
             if(playerIDs[i] == 0)
@@ -138,6 +142,46 @@ public class EmergencyMeetingManager : MonoBehaviour
                 }
             }
         }
+
+        #region Determine who was voted for
+        //Determine who got voted for
+        //Default is "skip"
+        int mostFrequentID = 0;
+        int maxCount = 0;
+        int curCount = 0;
+
+        for(int i = 0; i < playerIDs.Length; i++)
+        {
+            for(int j = i; j < playerIDs.Length; j++)
+            {
+                if(playerIDs[i] == playerIDs[j])
+                {
+                    curCount++;
+                }
+            }
+
+            if(curCount > maxCount)
+            {
+                mostFrequentID = playerIDs[i];
+                maxCount = curCount;
+            }
+            else if (curCount == maxCount)
+            {
+                mostFrequentID = 0;
+            }
+
+            curCount = 0;
+        }
+        #endregion
+
+        //Display the death marker on whoever got voted for
+        if (mostFrequentID != 0)
+        {
+            foreach (EmergencyVotePlayerBlock playerProfile in playerProfileBlocks)
+            {
+                playerProfile.MarkForDeath(mostFrequentID);
+            }
+        }        
     }
 
     public void EndMeeting(float time)
@@ -148,6 +192,7 @@ public class EmergencyMeetingManager : MonoBehaviour
 
         timerText.gameObject.SetActive(true);
         timerPreText = "Ending in: ";
+        timer = time;
 
         StartCoroutine(EndMeetingCoroutine(time));
     }

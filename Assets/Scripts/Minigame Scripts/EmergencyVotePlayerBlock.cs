@@ -15,6 +15,7 @@ public class EmergencyVotePlayerBlock : MonoBehaviour
     private GameObject deadPlayerBlackout;
     [SerializeField]
     private GameObject calledMeetingIndicator;
+    public GameObject deathMarker;
 
     public int playerID;
 
@@ -51,5 +52,11 @@ public class EmergencyVotePlayerBlock : MonoBehaviour
         return voteButton.gameObject;
     }
 
-    
+    public void MarkForDeath(int desiredPlayerID)
+    {
+        if(desiredPlayerID == playerID)
+        {
+            deathMarker.SetActive(true);
+        }
+    }
 }

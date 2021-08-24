@@ -141,5 +141,15 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void ClientReadyUp()
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.clientReadyUp))
+        {
+            _packet.Write(Player.instance.isRoundReady);
+
+            SendTCPData(_packet);
+        }
+    }
+
     #endregion
 }

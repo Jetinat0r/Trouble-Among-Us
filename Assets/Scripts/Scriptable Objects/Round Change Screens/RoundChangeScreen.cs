@@ -21,6 +21,8 @@ public class RoundChangeScreen : ScriptableObject
     //Use this for start/end round screen scripting?
     public void StartCutscene(MonoBehaviour caller)
     {
+        Player.instance.ResetWeapons();
+
         instantiatedCutscene = Instantiate(roundChangeScreenPrefab, Camera.main.transform);
 
         if (preActionDelegate != null)

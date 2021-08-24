@@ -1152,7 +1152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c559c8337566ed458acf142442cbe60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShoot: {fileID: 5275630867874494321}
 --- !u!1 &5275630867527510289
 GameObject:
   m_ObjectHideFlags: 0
@@ -1990,7 +1989,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c559c8337566ed458acf142442cbe60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShoot: {fileID: 5275630867874494321}
 --- !u!1 &5275630867688808145
 GameObject:
   m_ObjectHideFlags: 0
@@ -2205,6 +2203,7 @@ MonoBehaviour:
   hitboxDeactivationTimer: 0.22
   gameRoleTester: 0
   playerShoot: {fileID: 5275630867874494321}
+  playerMovement: {fileID: 5275630867874494327}
   playerUI: {fileID: 5275630867651428024}
   playerBody: {fileID: 5275630868520930925}
   playerOutline: {fileID: 5275630869332307016}
@@ -4288,7 +4287,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c559c8337566ed458acf142442cbe60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShoot: {fileID: 5275630867874494321}
 --- !u!1 &5275630869364077709
 GameObject:
   m_ObjectHideFlags: 0

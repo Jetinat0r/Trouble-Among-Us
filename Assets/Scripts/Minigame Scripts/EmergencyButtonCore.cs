@@ -28,7 +28,7 @@ public class EmergencyButtonCore : Minigame
 
     public void ButtonPress()
     {
-        if(player.GetComponent<Player>().meetingsRemaining > 0)
+        if (player.GetComponent<Player>().meetingsRemaining > 0 && Player.instance.isAlive)
         {
             //networkManager.StartEmergencyMeeting();
             ClientSend.ClientStartEmergencyMeeting();
