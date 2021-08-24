@@ -181,4 +181,65 @@ public class GameManager : MonoBehaviour
         tempEmergencyMeetingManagerScript.EndMeeting(endingTimer);
     }
     #endregion
+
+    public void EndRound(int victoryType)
+    {
+        //0: Innocent Win
+        //1: Traitor Win
+
+        //Kill the player and rez them using the cutscene's delegates
+
+        Debug.Log("VT: " + victoryType);
+        RoundChangeScreen victoryScreen;
+        if(victoryType == 0)
+        {
+            victoryScreen = goodRoundEndCutscene;
+        }
+        else if(victoryType == 1)
+        {
+            victoryScreen = evilRoundEndCutscene;
+        }
+        else
+        {
+            Debug.LogWarning("Unassigned Victory!");
+            victoryScreen = goodRoundEndCutscene;
+        }
+
+        victoryScreen.preActionDelegate += new RoundChangeScreen.PreActionDelegate(PreVictoryScreen);
+        victoryScreen.postActionDelegate += new RoundChangeScreen.PostActionDelegate(PostVictoryScreen);
+
+        victoryScreen.StartCutscene(this);
+        StartCoroutine(VictoryScreenUnsub(victoryScreen.cutsceneTimer, victoryScreen));
+
+        foreach(GameObject corpse in deadBodies)
+        {
+            Destroy(corpse);
+        }
+    }
+
+    private IEnumerator VictoryScreenUnsub(float waitTime, RoundChangeScreen cutscene)
+    {
+        yield return new WaitForSeconds(waitTime + 0.01f);
+    }
+
+    private void PreVictoryScreen()
+    {
+        Player.instance.Die();
+    }
+
+    private void PostVictoryScreen()
+    {
+        Player.instance.Resurrect();
+
+        //Resurrect everyone else
+        foreach (KeyValuePair<int, PlayerManager> pair in GameManager.players)
+        {
+            if (pair.Value != null && !pair.Value.isLocalPlayer)
+            {
+                pair.Value.Resurrect();
+            }
+        }
+
+        Player.instance.ResetViewRadius();
+    }
 }

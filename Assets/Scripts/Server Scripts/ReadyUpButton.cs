@@ -78,6 +78,6 @@ public class ReadyUpButton : MonoBehaviour
 
     public void RoundStart()
     {
-
+        mainGraphics.color = inactiveColor;
     }
 }

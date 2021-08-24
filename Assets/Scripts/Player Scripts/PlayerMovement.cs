@@ -126,7 +126,11 @@ public class PlayerMovement : MonoBehaviour
         {
             fovMeshGeneratorScript.SetViewRadius(_viewRadius);
         }
-        
+    }
+
+    public void SetViewRadius(float _viewRadius)
+    {
+        fovMeshGeneratorScript.SetViewRadius(_viewRadius);
     }
 
     private void OnDestroy()

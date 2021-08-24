@@ -18592,8 +18592,10 @@ MonoBehaviour:
     type: 2}
   evilRoundStartCutscene: {fileID: 11400000, guid: cb75c8047b98a434db02365646f92604,
     type: 2}
-  goodRoundEndCutscene: {fileID: 0}
-  evilRoundEndCutscene: {fileID: 0}
+  goodRoundEndCutscene: {fileID: 11400000, guid: fa7acee02b5099f499ddd777855898c7,
+    type: 2}
+  evilRoundEndCutscene: {fileID: 11400000, guid: 7de7848ad73e7534693ece0c38ce593e,
+    type: 2}
   localPlayerUsername: 
 --- !u!4 &2004327582
 Transform:

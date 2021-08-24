@@ -2198,9 +2198,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  isAlive: 1
+  isAlive: 0
   meetingsRemaining: 3
   hitboxDeactivationTimer: 0.22
+  isRoundReady: 0
   gameRoleTester: 0
   playerShoot: {fileID: 5275630867874494321}
   playerMovement: {fileID: 5275630867874494327}
@@ -4000,7 +4001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e36911098d09b3f42943336db12eabd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 1.5
+  viewRadius: 100
   viewAngle: 360
   edgeResolveIterations: 3
   edgeDistThreshold: 0.25

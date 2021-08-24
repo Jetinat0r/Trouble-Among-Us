@@ -136,6 +136,7 @@ public class ClientHandle : MonoBehaviour
         int _tasksPerPlayer = _packet.ReadInt();
         float _playerSpeed = _packet.ReadFloat();
         float _visionRadius = _packet.ReadFloat();
+        int _startingMeetings = _packet.ReadInt();
 
         //Since this contains a role for every playing player, we can assign tasks here
 
@@ -170,7 +171,7 @@ public class ClientHandle : MonoBehaviour
                 //Kinda dumb implementation (SetRole could be called in SetGameplayVariables), just want to assure things go right and threading doesn't hurt me
                 _player.SetRole(_roleArray[i]);
                 _player.AssignTasks(_tasksPerPlayer, _numInnocents);
-                _player.SetGameplayVariables(_playerSpeed, _visionRadius);
+                _player.SetGameplayVariables(_playerSpeed, _visionRadius, _startingMeetings);
                 _player.SetNameplateColor(false);
             }
         }
@@ -260,5 +261,15 @@ public class ClientHandle : MonoBehaviour
         float _endEmergencyMeetingTimer = _packet.ReadFloat();
 
         GameManager.instance.EndEmergencyMeeting(toPlayerIDs, _fromPlayers, _endEmergencyMeetingTimer);
+    }
+
+    public static void RemoteEndRound(Packet _packet)
+    {
+        //0: Innocent Victory
+        //1: Traitor Victory
+        int victoryType = _packet.ReadInt();
+
+
+        GameManager.instance.EndRound(victoryType);
     }
 }

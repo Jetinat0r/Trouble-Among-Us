@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    //gameRole 0 = innocent
-    //gameRole 1 = traitor
-    //gameRole 2 = detective? may go unused
+    //gameRole 0 = n/a
+    //gameRole 1 = innocent
+    //gameRole 2 = traitor
+    //gameRole 3 = detective? may go unused
     public enum Role
     {
         Innocent,
@@ -47,6 +48,8 @@ public class Player : MonoBehaviour
     public GameObject ghostCamera;
     //Used so ghosts can see lol
     public GameObject ghostViewSquare;
+
+    private float defaultViewRadius = 100f;
 
     private bool inMenu = false;
 
@@ -103,7 +106,7 @@ public class Player : MonoBehaviour
     //    playerUI.CompleteMinigame(isEmergency);
     //}
 
-    private void Die()
+    public void Die()
     {
         isAlive = false;
 
@@ -152,7 +155,7 @@ public class Player : MonoBehaviour
     }
 
     //Used at the end of rounds to bring players back, I'm not implementing undead players
-    private void Resurrect()
+    public void Resurrect()
     {
         //isAlive = true;
         health = maxHealth;
@@ -197,12 +200,13 @@ public class Player : MonoBehaviour
     }
 
     //One place for all of these things
-    public void SetGameplayVariables(float _playerSpeed, float _viewRadius)
+    public void SetGameplayVariables(float _playerSpeed, float _viewRadius, int _startingMeetings)
     {
         isAlive = true;
 
         playerShoot.AllowShooting();
         gameObject.GetComponent<WeaponManager>().SetWeapon(0);
+        meetingsRemaining = _startingMeetings;
         
 
         bool _isTraitor = false;
@@ -272,5 +276,10 @@ public class Player : MonoBehaviour
     public PlayerShoot GetPlayerShoot()
     {
         return playerShoot;
+    }
+
+    public void ResetViewRadius()
+    {
+        gameObject.GetComponent<PlayerMovement>().SetViewRadius(defaultViewRadius);
     }
 }

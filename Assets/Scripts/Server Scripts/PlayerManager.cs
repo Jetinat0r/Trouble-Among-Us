@@ -193,20 +193,29 @@ public class PlayerManager : MonoBehaviour
         nameplate.layer = _layer;
     }
 
-    private void Resurrect()
+    public void Resurrect()
     {
         //isAlive = true;
 
-        SpriteRenderer _playerBodySprite = playerBody.GetComponent<SpriteRenderer>();
-        _playerBodySprite.color = new Color(_playerBodySprite.color.r, _playerBodySprite.color.g, _playerBodySprite.color.b, 1f);
-        playerOutline.SetActive(true);
+        if (isLocalPlayer)
+        {
+            GetComponent<Player>().Resurrect();
+        }
+        else
+        {
+            SetRole(0);
 
-        int _colliderLayer = LayerMask.NameToLayer("Default");
-        int _visualLayer = LayerMask.NameToLayer("BehindMask");
-        gameObject.layer = _colliderLayer;
-        playerBody.layer = _visualLayer;
-        playerOutline.layer = _visualLayer;
-        nameplate.layer = _visualLayer;
+            SpriteRenderer _playerBodySprite = playerBody.GetComponent<SpriteRenderer>();
+            _playerBodySprite.color = new Color(_playerBodySprite.color.r, _playerBodySprite.color.g, _playerBodySprite.color.b, 1f);
+            playerOutline.SetActive(true);
+
+            int _colliderLayer = LayerMask.NameToLayer("Default");
+            int _visualLayer = LayerMask.NameToLayer("BehindMask");
+            gameObject.layer = _colliderLayer;
+            playerBody.layer = _visualLayer;
+            playerOutline.layer = _visualLayer;
+            nameplate.layer = _visualLayer;
+        }
     }
 
     public void AssignTasks(int _numTasks, int _numInnocents)
@@ -232,13 +241,13 @@ public class PlayerManager : MonoBehaviour
     //Sets:
     // - Movement Speed
     // - viewRadius
-    public void SetGameplayVariables(float _playerSpeed, float _viewRadius)
+    public void SetGameplayVariables(float _playerSpeed, float _viewRadius, int _startingMeetings)
     {
         isAlive = true;
 
         if (isLocalPlayer)
         {
-            gameObject.GetComponent<Player>().SetGameplayVariables(_playerSpeed, _viewRadius);
+            gameObject.GetComponent<Player>().SetGameplayVariables(_playerSpeed, _viewRadius, _startingMeetings);
         }
     }
 
