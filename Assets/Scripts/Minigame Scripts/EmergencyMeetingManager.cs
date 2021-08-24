@@ -12,6 +12,9 @@ public class EmergencyMeetingManager : MonoBehaviour
     private GameObject playerProfileBlockContainer;
 
     [SerializeField]
+    private TMP_Text tasksCompleteText;
+
+    [SerializeField]
     private GameObject skipButton;
     [SerializeField]
     private GameObject skipButtonRevealedVotes;
@@ -54,6 +57,7 @@ public class EmergencyMeetingManager : MonoBehaviour
     public void StartMeeting(int _playerID, float _timer)
     {
         SetupMeetingLayout(_playerID);
+        SetupCompletedTasks();
 
         Player.instance.StartMeeting();
         if (!Player.instance.isAlive)
@@ -85,6 +89,27 @@ public class EmergencyMeetingManager : MonoBehaviour
             voteButtons.Add(_playerBlock.GetComponent<EmergencyVotePlayerBlock>().GetVoteButton());
             playerProfileBlocks.Add(_playerBlock.GetComponent<EmergencyVotePlayerBlock>());
         }
+    }
+
+    private void SetupCompletedTasks()
+    {
+        int curCompleted = 0;
+        int total = 0;
+
+        foreach(KeyValuePair<int, PlayerManager> pair in GameManager.players)
+        {
+            if(pair.Value != null)
+            {
+                // 1 = innocent
+                if(pair.Value.gameRole == 1)
+                {
+                    curCompleted += pair.Value.completedTasks;
+                    total += pair.Value.totalTasks;
+                }
+            }
+        }
+
+        tasksCompleteText.text = "Completed Tasks\n" + curCompleted + "/" + total;
     }
 
     private void HideTimer()

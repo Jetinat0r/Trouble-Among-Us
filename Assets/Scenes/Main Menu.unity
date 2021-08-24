@@ -18588,6 +18588,12 @@ MonoBehaviour:
   mainMenuSceneName: Main Menu
   emergencyMeetingIntroCutscene: {fileID: 11400000, guid: 39ae88d95dc2efc448d7b3a6dfaf58f6,
     type: 2}
+  goodRoundStartCutscene: {fileID: 11400000, guid: f8c812a852522c145aef4e71c9c5a8f9,
+    type: 2}
+  evilRoundStartCutscene: {fileID: 11400000, guid: cb75c8047b98a434db02365646f92604,
+    type: 2}
+  goodRoundEndCutscene: {fileID: 0}
+  evilRoundEndCutscene: {fileID: 0}
   localPlayerUsername: 
 --- !u!4 &2004327582
 Transform:

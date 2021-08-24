@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d9114187abe9944af570f6a8b20cf3, type: 3}
   m_Name: Good Win Cutscene
   m_EditorClassIdentifier: 
-  roundChangeScreenPrefab: {fileID: 0}
-  cutsceneTimer: 0
+  roundChangeScreenPrefab: {fileID: 6766624264227597679, guid: 858d7539f5e3ee54ba1edbcca6d8ee14,
+    type: 3}
+  cutsceneTimer: 4
