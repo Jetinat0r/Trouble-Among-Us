@@ -136,7 +136,9 @@ public class ClientHandle : MonoBehaviour
         int _tasksPerPlayer = _packet.ReadInt();
         float _playerSpeed = _packet.ReadFloat();
         float _visionRadius = _packet.ReadFloat();
+        float _viewAngle = _packet.ReadFloat();
         int _startingMeetings = _packet.ReadInt();
+        float _radioChargeTime = _packet.ReadFloat();
 
         //Since this contains a role for every playing player, we can assign tasks here
 
@@ -171,7 +173,7 @@ public class ClientHandle : MonoBehaviour
                 //Kinda dumb implementation (SetRole could be called in SetGameplayVariables), just want to assure things go right and threading doesn't hurt me
                 _player.SetRole(_roleArray[i]);
                 _player.AssignTasks(_tasksPerPlayer, _numInnocents);
-                _player.SetGameplayVariables(_playerSpeed, _visionRadius, _startingMeetings);
+                _player.SetGameplayVariables(_playerSpeed, _visionRadius, _viewAngle, _startingMeetings);
                 _player.SetNameplateColor(false);
             }
         }
@@ -192,6 +194,7 @@ public class ClientHandle : MonoBehaviour
         }
 
         GameManager.instance.StartRound();
+        MicrophoneManager.instance.StartRound(_radioChargeTime);
     }
 
     public static void AssignEmergency(Packet _packet)

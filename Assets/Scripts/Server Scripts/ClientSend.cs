@@ -151,5 +151,21 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void DevSetRoundVars(float _playerSpeed, float _visionRadius, float _viewAngle, int _startingMeetings, float _radioChargeTime, float _emergencyMeetingTimer, int _playersPerTraitor, int _tasksPerPlayer)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.devSetRoundVars))
+        {
+            _packet.Write(_playerSpeed);
+            _packet.Write(_visionRadius);
+            _packet.Write(_viewAngle);
+            _packet.Write(_startingMeetings);
+            _packet.Write(_radioChargeTime);
+            _packet.Write(_emergencyMeetingTimer);
+            _packet.Write(_playersPerTraitor);
+            _packet.Write(_tasksPerPlayer);
+
+            SendTCPData(_packet);
+        }
+    }
     #endregion
 }

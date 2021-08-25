@@ -55,6 +55,12 @@ public class FOVMeshGenerator : MonoBehaviour
         viewRadius = _newViewRadius;
     }
 
+    public void SetViewAngle(float _newViewAngle)
+    {
+        Mathf.Clamp(_newViewAngle, 0, 360);
+        viewAngle = _newViewAngle;
+    }
+
     public void DrawFieldOfView()
     {
         int _stepCount = Mathf.RoundToInt(viewAngle * meshResolution);

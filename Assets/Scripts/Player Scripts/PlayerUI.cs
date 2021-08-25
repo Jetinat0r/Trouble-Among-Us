@@ -78,6 +78,27 @@ public class PlayerUI : MonoBehaviour, IUIObjectHover
     }
     #endregion
 
+    #region Microphone Stuff
+    [Header("Microphone Stuff")]
+    [SerializeField]
+    private Image microphoneGraphics;
+    [SerializeField]
+    private Image radioGraphics;
+    [SerializeField]
+    private GameObject radioCrossGraphics;
+    [SerializeField]
+    private Color activeMicColor;
+    [SerializeField]
+    private Color inactiveMicColor;
+
+    [SerializeField]
+    private RectTransform chargeBar;
+    [SerializeField]
+    private RectTransform chargeBarEnd;
+    [SerializeField]
+    private RectTransform chargeBarStart;
+    #endregion
+
     #region Misc Called Objects
     [Header("Misc Called Objects")]
 
@@ -98,6 +119,15 @@ public class PlayerUI : MonoBehaviour, IUIObjectHover
 
         MinigameManager.instance.OnMinigameComplete += OnMinigameComplete;
         MinigameManager.instance.OnMinigameAssign += OnMinigameAssign;
+
+        MicrophoneManager.instance.OnMicrophoneEnable += OnMicrophoneEnable;
+        MicrophoneManager.instance.OnMicrophoneDisable += OnMicrophoneDisable;
+        MicrophoneManager.instance.OnRadioEnable += OnRadioEnable;
+        MicrophoneManager.instance.OnRadioDisable += OnRadioDisable;
+        MicrophoneManager.instance.OnCommSabotage += OnCommSabotage;
+        MicrophoneManager.instance.OnCommFix += OnCommFix;
+
+        MicrophoneManager.instance.OnRadioChargeUpdate += OnRadioChargeUpdate;
     }
 
     //private void Update()
@@ -464,12 +494,57 @@ public class PlayerUI : MonoBehaviour, IUIObjectHover
         return new List<TaskListMinigame>();
     }
 
+    #region Microphone Stuff
+    private void OnMicrophoneEnable(object sender, EventArgs e)
+    {
+        microphoneGraphics.color = activeMicColor;
+    }
+
+    private void OnMicrophoneDisable(object sender, EventArgs e)
+    {
+        microphoneGraphics.color = inactiveMicColor;
+    }
+
+    private void OnRadioEnable(object sender, EventArgs e)
+    {
+       radioGraphics.color = activeMicColor;
+    }
+
+    private void OnRadioDisable(object sender, EventArgs e)
+    {
+        radioGraphics.color = inactiveMicColor;
+    }
+
+    private void OnCommSabotage(object sender, EventArgs e)
+    {
+        radioGraphics.color = inactiveMicColor;
+        radioCrossGraphics.SetActive(true);
+    }
+
+    private void OnCommFix(object sender, EventArgs e)
+    {
+        radioCrossGraphics.SetActive(false);
+    }
+
+    private void OnRadioChargeUpdate(object sender, MicrophoneManager.OnRadioChargeUpdateEventArgs e)
+    {
+        chargeBar.sizeDelta = new Vector2(Mathf.Lerp(chargeBarStart.anchoredPosition.x, chargeBarEnd.anchoredPosition.x, e.currentPercentCharge), chargeBar.sizeDelta.y);
+    }
+    #endregion
+
     private void OnDestroy()
     {
         //Unsub from events
         MinigameManager.instance.OnMinigameComplete -= OnMinigameComplete;
         MinigameManager.instance.OnMinigameAssign -= OnMinigameAssign;
-    }
 
-    
+        MicrophoneManager.instance.OnMicrophoneEnable -= OnMicrophoneEnable;
+        MicrophoneManager.instance.OnMicrophoneDisable -= OnMicrophoneDisable;
+        MicrophoneManager.instance.OnRadioEnable -= OnRadioEnable;
+        MicrophoneManager.instance.OnRadioDisable -= OnRadioDisable;
+        MicrophoneManager.instance.OnCommSabotage -= OnCommSabotage;
+        MicrophoneManager.instance.OnCommFix -= OnCommFix;
+
+        MicrophoneManager.instance.OnRadioChargeUpdate -= OnRadioChargeUpdate;
+    }
 }

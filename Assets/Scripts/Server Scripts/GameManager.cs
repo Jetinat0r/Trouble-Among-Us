@@ -215,6 +215,9 @@ public class GameManager : MonoBehaviour
         {
             Destroy(corpse);
         }
+
+        MicrophoneManager.instance.EndRound();
+        MinigameManager.instance.EndRound();
     }
 
     private IEnumerator VictoryScreenUnsub(float waitTime, RoundChangeScreen cutscene)
@@ -240,6 +243,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        Player.instance.ResetViewRadius();
+        Player.instance.ResetView();
     }
 }

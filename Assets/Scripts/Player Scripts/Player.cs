@@ -200,7 +200,7 @@ public class Player : MonoBehaviour
     }
 
     //One place for all of these things
-    public void SetGameplayVariables(float _playerSpeed, float _viewRadius, int _startingMeetings)
+    public void SetGameplayVariables(float _playerSpeed, float _viewRadius, float _viewAngle, int _startingMeetings)
     {
         isAlive = true;
 
@@ -215,7 +215,7 @@ public class Player : MonoBehaviour
             _isTraitor = true;
         }
 
-        gameObject.GetComponent<PlayerMovement>().SetGameplayVariables(_playerSpeed, _viewRadius, _isTraitor);
+        gameObject.GetComponent<PlayerMovement>().SetGameplayVariables(_playerSpeed, _viewRadius, _viewAngle, _isTraitor);
     }
 
     public void AssignTasks(int _numTasks, int _numInnocents)
@@ -278,8 +278,9 @@ public class Player : MonoBehaviour
         return playerShoot;
     }
 
-    public void ResetViewRadius()
+    public void ResetView()
     {
         gameObject.GetComponent<PlayerMovement>().SetViewRadius(defaultViewRadius);
+        gameObject.GetComponent<PlayerMovement>().SetViewAngle(360);
     }
 }

@@ -241,13 +241,13 @@ public class PlayerManager : MonoBehaviour
     //Sets:
     // - Movement Speed
     // - viewRadius
-    public void SetGameplayVariables(float _playerSpeed, float _viewRadius, int _startingMeetings)
+    public void SetGameplayVariables(float _playerSpeed, float _viewRadius, float _viewAngle, int _startingMeetings)
     {
         isAlive = true;
 
         if (isLocalPlayer)
         {
-            gameObject.GetComponent<Player>().SetGameplayVariables(_playerSpeed, _viewRadius, _startingMeetings);
+            gameObject.GetComponent<Player>().SetGameplayVariables(_playerSpeed, _viewRadius, _viewAngle, _startingMeetings);
         }
     }
 

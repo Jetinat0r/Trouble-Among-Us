@@ -44,6 +44,8 @@ public class MinigameManager : MonoBehaviour
     public List<MinigameStarter> currentMinigames = new List<MinigameStarter>();
     public List<MinigameStarter> currentGlobalMinigames = new List<MinigameStarter>();
 
+    public List<GameObject> sabotageDoors;
+
     private void Awake()
     {
         if (instance == null)
@@ -94,6 +96,20 @@ public class MinigameManager : MonoBehaviour
 
         OnMinigameAssign?.Invoke(this, new OnMinigameAssignArgs { isEmergency = true, index = _ms.index, incompleteText = _ms.incompleteText, isFirst = _ms.isFirst });
 
+        //WARNING: HARD CODING, I'M SORRY
+        //NOTE: Put this one at the end of the list
+        if(_ms.isFirst)
+        {
+            MicrophoneManager.instance.CommsSabotage();
+        }
+        else
+        {
+            //Activate door of _ms.index
+
+            //_ms.index - 1 bc emergency button takes index 0
+            sabotageDoors[_ms.index - 1].SetActive(true);
+        }
+
         //Only one Emergency can take place at the same time
 
         _ms.gameObject.SetActive(true);
@@ -130,13 +146,17 @@ public class MinigameManager : MonoBehaviour
     //Door tasks or emergencies
     public void GlobalMinigameCompleted(MinigameStarter _ms)
     {
-        //DONE: Clear from UI
-        //TODO: yell at every other player
         OnMinigameComplete?.Invoke(this, new OnMinigameCompleteEventArgs { isEmergency = true, index = _ms.index, isFinal = true, completeText = _ms.completeText, isFirst = _ms.isFirst });
+        if (_ms.isFirst)
+        {
+            MicrophoneManager.instance.CommsFix();
+        }
+        else
+        {
+            sabotageDoors[_ms.index - 1].SetActive(false);
+        }
 
-        //To be handled server side
-        ClientSend.ClientCompleteEmergency(_ms);
-        //globalMinigameStarters[_ms.index].ClearMinigame();
+        _ms.ClearMinigame();
     }
 
     public void MinigameCompleted(MinigameStarter _ms)
@@ -196,5 +216,15 @@ public class MinigameManager : MonoBehaviour
             //Debug.Log("Heya " + i);
             AssignMinigame(currentMinigames[i]);
         }
+    }
+
+    public void EndRound()
+    {
+        foreach(GameObject door in sabotageDoors)
+        {
+            door.SetActive(false);
+        }
+
+        ClearMinigames();
     }
 }

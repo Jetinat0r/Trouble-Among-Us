@@ -17,10 +17,30 @@ public class MicrophoneManager : MonoBehaviour
     private bool hasClip = false;
     private bool isInGame = false;
 
+    private bool canActivateRadio = true;
+
     private float timer = 0;
+
+    private float curRadioCharge = 100f;
+    private float maxRadioCharge = 100f;
 
     #region Local Player Specifics
     public bool isRadioActive = false;
+
+    public event EventHandler OnMicrophoneEnable;
+    public event EventHandler OnMicrophoneDisable;
+
+    public event EventHandler OnRadioEnable;
+    public event EventHandler OnRadioDisable;
+
+    public event EventHandler OnCommSabotage;
+    public event EventHandler OnCommFix;
+
+    public event EventHandler<OnRadioChargeUpdateEventArgs> OnRadioChargeUpdate;
+    public class OnRadioChargeUpdateEventArgs : EventArgs
+    {
+        public float currentPercentCharge;
+    }
     #endregion
 
     //[SerializeField, Range(0f, 10f)]
@@ -91,52 +111,86 @@ public class MicrophoneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (isInGame)
         {
-            isRadioActive = !isRadioActive;
-        }
-
-        if (Input.GetKey(KeyCode.V))
-        {
-
-            if (isRecording)
+            if (Input.GetKeyDown(KeyCode.LeftShift) && canActivateRadio)
             {
-                //SendClip(true);
-            }
-            else
-            {
-                isRecording = true;
-                hasClip = true;
-
-                timer = 0;
-
-                heldAudioClip = Microphone.Start(currentMicrophone, false, 1, maxFreq);
+                if (isRadioActive)
+                {
+                    isRadioActive = false;
+                    OnRadioDisable?.Invoke(this, EventArgs.Empty);
+                }
+                else
+                {
+                    if(curRadioCharge > 0)
+                    {
+                        isRadioActive = true;
+                        OnRadioEnable?.Invoke(this, EventArgs.Empty);
+                    }
+                }
             }
 
-            //timer += Time.deltaTime;
-        }
-
-        if (Input.GetKeyUp(KeyCode.V))
-        {
-            isRecording = false;
-
-            if (hasClip)
+            if (Input.GetKey(KeyCode.Q))
             {
-                SendClip(false);
+
+                if (!isRecording)
+                {
+                    isRecording = true;
+                    hasClip = true;
+
+                    timer = 0;
+
+                    OnMicrophoneEnable?.Invoke(this, EventArgs.Empty);
+
+                    heldAudioClip = Microphone.Start(currentMicrophone, false, 1, maxFreq);
+                }
+
+                //timer += Time.deltaTime;
+            }
+
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                isRecording = false;
+
+                OnMicrophoneDisable?.Invoke(this, EventArgs.Empty);
+
+                if (hasClip)
+                {
+                    SendClip(false);
+                }
+            }
+
+            if (isRadioActive)
+            {
+                curRadioCharge -= Time.deltaTime;
+
+                UpdateRadioCharge(curRadioCharge / maxRadioCharge);
+
+                if(curRadioCharge <= 0)
+                {
+                    isRadioActive = false;
+                    OnRadioDisable?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
     }
 
     private void FixedUpdate()
     {
-        if (isRecording && timer >= 0.2)
+        if (isInGame)
         {
-            timer = 0;
+            if (isRecording && timer >= 0.2)
+            {
+                timer += Time.fixedDeltaTime;
 
-            SendClip(true);
+                if (timer >= 0.2)
+                {
+                    timer = 0;
+
+                    SendClip(true);
+                }
+            }
         }
-
-        timer += Time.fixedDeltaTime;
     }
 
     private void SendClip(bool _keepRecording)
@@ -230,6 +284,44 @@ public class MicrophoneManager : MonoBehaviour
     private void OnServerDisconnect(object sender, EventArgs e)
     {
         isInGame = false;
+    }
+
+    public void CommsSabotage()
+    {
+        if(Player.instance.GetGameRole() != Player.Role.Traitor)
+        {
+            OnCommSabotage?.Invoke(this, EventArgs.Empty);
+
+            canActivateRadio = false;
+            isRadioActive = false;
+        }
+    }
+
+    public void CommsFix()
+    {
+        canActivateRadio = true;
+
+        OnCommFix?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void StartRound(float radioChargeTime)
+    {
+        maxRadioCharge = radioChargeTime;
+        curRadioCharge = maxRadioCharge;
+
+        isRadioActive = false;
+        OnRadioDisable?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void EndRound()
+    {
+        canActivateRadio = true;
+        OnCommFix?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void UpdateRadioCharge(float percentCharge)
+    {
+        OnRadioChargeUpdate?.Invoke(this, new OnRadioChargeUpdateEventArgs { currentPercentCharge = percentCharge });
     }
 
     private void OnDestroy()

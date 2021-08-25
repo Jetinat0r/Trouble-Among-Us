@@ -114,7 +114,7 @@ public class PlayerMovement : MonoBehaviour
         ClientSend.PlayerPosRot(transform.position, weaponPivot.transform.rotation);
     }
 
-    public void SetGameplayVariables(float _playerSpeed, float _viewRadius, bool _isTraitor)
+    public void SetGameplayVariables(float _playerSpeed, float _viewRadius, float _viewAngle, bool _isTraitor)
     {
         movementSpeed = _playerSpeed;
 
@@ -126,11 +126,18 @@ public class PlayerMovement : MonoBehaviour
         {
             fovMeshGeneratorScript.SetViewRadius(_viewRadius);
         }
+
+        fovMeshGeneratorScript.SetViewAngle(_viewAngle);
     }
 
     public void SetViewRadius(float _viewRadius)
     {
         fovMeshGeneratorScript.SetViewRadius(_viewRadius);
+    }
+
+    public void SetViewAngle(float _viewAngle)
+    {
+        fovMeshGeneratorScript.SetViewAngle(_viewAngle);
     }
 
     private void OnDestroy()

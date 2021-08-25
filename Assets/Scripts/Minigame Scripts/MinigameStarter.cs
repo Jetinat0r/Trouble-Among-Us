@@ -128,7 +128,8 @@ public class MinigameStarter : MonoBehaviour
         {
             isSpawned = false;
             minigameGlow.SetActive(false);
-            minigameManager.GlobalMinigameCompleted(this);
+            //minigameManager.GlobalMinigameCompleted(this);
+            ClientSend.ClientCompleteEmergency(this);
             isOpen = false;
             gameObject.SetActive(false);
         }
